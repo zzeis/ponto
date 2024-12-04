@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('relatorios', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('departamento_solicitante_id');
+            $table->text('descricao_servico');
+            $table->string('arquivo_pdf')->nullable();
+            $table->enum('status', ['pendente', 'concluido'])->default('pendente');
             $table->timestamps();
+    
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('departamento_solicitante_id')->references('id')->on('departamentos');
         });
     }
 

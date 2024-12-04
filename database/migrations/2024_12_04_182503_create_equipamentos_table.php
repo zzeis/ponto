@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('equipamentos', function (Blueprint $table) {
             $table->id();
+            $table->string('nome');
+            $table->string('tipo');  // computador, impressora, roteador
+            $table->string('ip')->nullable();
+            $table->enum('status', ['ativo', 'manutencao', 'inativo']);
+            $table->boolean('locado')->default(false);
             $table->timestamps();
         });
     }

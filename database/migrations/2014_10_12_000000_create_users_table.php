@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->unsignedBigInteger('departamento_id');
+            $table->enum('nivel_acesso', ['tecnico', 'supervisor', 'admin']);
             $table->timestamps();
+    
+            $table->foreign('departamento_id')->references('id')->on('departamentos');
         });
     }
-
     /**
      * Reverse the migrations.
      */

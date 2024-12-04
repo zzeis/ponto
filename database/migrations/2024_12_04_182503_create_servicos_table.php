@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('servicos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tecnico_id');
+            $table->unsignedBigInteger('supervisor_id');
+            $table->text('descricao');
+            $table->enum('prioridade', ['baixa', 'media', 'alta']);
+            $table->enum('status', ['pendente', 'em_andamento', 'concluido']);
+            $table->date('data_limite');
             $table->timestamps();
+    
+            $table->foreign('tecnico_id')->references('id')->on('users');
+            $table->foreign('supervisor_id')->references('id')->on('users');
         });
     }
 
