@@ -6,15 +6,26 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="#">
-                        <img src="{{asset('images/LogoSATI.png')}}" class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <img src="{{ asset('images/LogoSATI.png') }}"
+                            class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('estagiario.dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @if (Auth::user()->nivel_acesso == 'estagiario')
+                        <x-nav-link :href="route('estagiario.dashboard')" :active="request()->routeIs('estagiario.dashboard')">
+                            {{ __('Dashboard ') }}
+                        </x-nav-link>
+                    @elseif(Auth::user()->nivel_acesso == 'admin')
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                            {{ __('Dashboard Admin') }}
+                        </x-nav-link>
+                    @elseif(Auth::user()->nivel_acesso == 'coordenador')
+                        <x-nav-link :href="route('coordenador.dashboard')" :active="request()->routeIs('coordenador.dashboard')">
+                            {{ __('Dashboard ') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
