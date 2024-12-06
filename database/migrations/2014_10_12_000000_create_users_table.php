@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->unsignedBigInteger('departamento_id');
-            $table->enum('nivel_acesso', ['tecnico', 'supervisor', 'admin']);
+            $table->enum('nivel_acesso', ['estagiario','tecnico', 'supervisor', 'admin']);
             $table->timestamps();
     
             $table->foreign('departamento_id')->references('id')->on('departamentos');
