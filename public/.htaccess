@@ -1,4 +1,6 @@
 <IfModule mod_rewrite.c>
+  # Configuração para permitir acesso a arquivos de imagens
+  RewriteRule ^images/(.*)$ public/images/$1 [L]
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
