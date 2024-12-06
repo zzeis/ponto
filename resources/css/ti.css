@@ -1,0 +1,76 @@
+/* Variáveis de cores */
+:root {
+    --chegada-cor: #006300;
+    --saida-almoco-cor: #009000;
+    --chegada-almoco-cor: #00be00;
+    --saida-final-cor: #15ee00;
+}
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact; /* Garante que cores sejam aplicadas */
+        
+        color: black;
+    }
+
+
+
+    /* Ajusta margens específicas */
+    @page {
+        margin: 0;
+        }
+}
+/* Layout geral */
+.allmid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilos gerais */
+.title {
+    font-size: 1.9rem;
+    color: #d6dee7;
+}
+
+.botao {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 400px;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    color: white;
+}
+
+#table-mes td {
+    background-color: white;
+}
+#table-mes td,th{
+    border: 1px solid black;
+}
+.btn-ponto{
+    font-size: 1.8rem;
+}
+/* Estilos específicos */
+/* .chegada {
+    background-color: var(--chegada-cor);
+    color: #fff;
+}
+
+.saida-almoco {
+    background-color: var(--saida-almoco-cor);
+    color: #fff;
+}
+
+.chegada-almoco {
+    background-color: var(--chegada-almoco-cor);
+    color: #fff;
+}
+
+.saida-final {
+    background-color: var(--saida-final-cor);
+    color: #fff;
+} */
