@@ -3,23 +3,68 @@
 namespace App\Http\Controllers;
 
 use App\Models\RegistroPonto;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RegistroPontoController extends Controller
 {
     public function index()
     {
-        // Registros do mês atual do usuário logado
+        // Calcula o início (dia 15 do mês anterior)
+        $dataInicio = now()->subMonth()->day(15);
+
+        // Calcula o fim (dia 16 do mês atual)
+        $dataFim = now()->day(16);
+        $dataHoje = Carbon::today()->format('Y-m-d');
+        // Registros no intervalo especificado para o usuário logado
         $registros = RegistroPonto::where('user_id', auth()->id())
-            ->whereMonth('data', now()->month)
-            ->whereYear('data', now()->year)
+            ->whereBetween('data', [$dataInicio, $dataFim])
             ->orderBy('data')
             ->orderBy('hora')
             ->get()
             ->groupBy('data');
 
-        return view('registro_ponto.index', compact('registros'));
+        $registrosHoje = RegistroPonto::where('user_id', auth()->id())
+            ->whereDate('data', $dataHoje)
+            ->pluck('tipo')
+            ->toArray();
+
+        return view('relogioponto.index', compact('registros','registrosHoje'));
+    }
+    public function relatoriomes()
+    {
+        // Calcula o início (dia 15 do mês anterior)
+        $dataInicio = now()->subMonth()->day(15);
+
+        // Calcula o fim (dia 16 do mês atual)
+        $dataFim = now()->day(16);
+
+        // Garanta que o usuário está autenticado
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        $user = Auth::user();
+        // Registros no intervalo especificado para o usuário logado
+        $registros = RegistroPonto::where('user_id', auth()->id())
+            ->whereBetween('data', [$dataInicio, $dataFim])
+            ->orderBy('data')
+            ->orderBy('hora')
+            ->get()
+            ->groupBy('data');
+
+        $logoPath = public_path('images/logo.png');
+        $logoBase64 = base64_encode(file_get_contents($logoPath));
+        $pdf = Pdf::loadView('relogioponto.relatoriomes', [
+            'registros' => $registros,
+            'user' => $user,
+            'logoBase64' => $logoBase64
+        ]);
+        return $pdf->download('relatorio-pontos-mes.pdf');
+
+        //  return view('relogioponto.relatoriomes', compact('registros', 'user'));
     }
 
     public function registrar($tipo)
