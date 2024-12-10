@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RegistroPonto;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,7 @@ class RegistroPontoController extends Controller
             ->pluck('tipo')
             ->toArray();
 
-        return view('relogioponto.index', compact('registros','registrosHoje'));
+        return view('relogioponto.index', compact('registros', 'registrosHoje'));
     }
     public function relatoriomes()
     {
@@ -65,6 +66,45 @@ class RegistroPontoController extends Controller
         return $pdf->download('relatorio-pontos-mes.pdf');
 
         //  return view('relogioponto.relatoriomes', compact('registros', 'user'));
+    }
+
+
+
+    public function downloadRegistrosByUser(User $user, Request $request)
+    {
+        $mes = $request->mes ?? now()->month;
+        $ano = $request->ano ?? now()->year;
+
+        // Defina o início (dia 15 do mês anterior)
+        $dataInicio = now()->setYear($ano)->setMonth($mes)->subMonthNoOverflow()->setDay(15)->startOfDay();
+
+        // Defina o fim (dia 16 do mês atual)
+        $dataFim = now()->setYear($ano)->setMonth($mes)->setDay(16)->endOfDay();
+
+        // Registros no intervalo
+        $registros = RegistroPonto::where('user_id', $user->id)
+            ->whereBetween('data', [$dataInicio, $dataFim])
+            ->orderBy('data')
+            ->orderBy('hora')
+            ->get()
+            ->groupBy('data');
+
+        $observacoes = RegistroPonto::where('user_id', $user->id)
+            ->whereBetween('data', [$dataInicio, $dataFim])
+            ->whereNotNull('observacao')
+            ->orderBy('data')
+            ->pluck('observacao', 'data'); // Retorna as observações associadas às datas
+
+        $logoPath = public_path('images/logo.png');
+        $logoBase64 = base64_encode(file_get_contents($logoPath));
+        $pdf = Pdf::loadView('relogioponto.relatoriomes', [
+            'registros' => $registros,
+            'user' => $user,
+            'logoBase64' => $logoBase64,
+            'observacoes' => $observacoes
+        ]);
+
+        return $pdf->download('relatorio-pontos-mes.pdf');
     }
 
     public function registrar($tipo)
@@ -115,6 +155,23 @@ class RegistroPontoController extends Controller
             ->groupBy(['user.name', 'data']);
 
         return view('admin.registros_ponto', compact('registros'));
+    }
+
+    public function salvarObservacao(Request $request, $data)
+    {
+        $request->validate([
+            'observacao' => 'nullable|string',
+        ]);
+
+        // Atualize ou crie a observação no registro do dia
+        $registro = RegistroPonto::where('data', $data)->first();
+
+        if ($registro) {
+            $registro->observacao = $request->observacao;
+            $registro->save();
+        }
+
+        return back()->with('success', 'Observação salva com sucesso.');
     }
 
     // Gerar relatório consolidado
