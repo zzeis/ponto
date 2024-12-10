@@ -31,6 +31,12 @@ class AdminDashboardController extends Controller
         return view('admin.listaestagiarios', compact('estagiarios'));
     }
 
+    public function toggleUserStatus(User $user)
+    {
+        $user->update(['is_active' => !$user->is_active]);
+        return back()->with('success', 'Status do usuário atualizado');
+    }
+
 
     public function verifyHorarios(User $user, Request $request)
     {
