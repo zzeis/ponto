@@ -44,7 +44,8 @@
         table {
             font-size: 1rem
         }
-        table #visto{
+
+        table #visto {
             width: 150px
         }
     </style>
@@ -88,12 +89,23 @@
                             <td>{{ $registrosDia->where('tipo', 'saida_almoco')->first()?->hora ?? '-' }}</td>
                             <td>{{ $registrosDia->where('tipo', 'retorno_almoco')->first()?->hora ?? '-' }}</td>
                             <td>{{ $registrosDia->where('tipo', 'saida_fim')->first()?->hora ?? '-' }}</td>
-                            <td > </td>
+                            <td> </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-
+            <div class="observacoes">
+                <h3>Observações</h3>
+                @if (isset($observacoes) && $observacoes->isNotEmpty())
+                    <ul>
+                        @foreach ($observacoes as $data => $observacao)
+                            <li><strong>{{ $data }}:</strong> {{ $observacao }}</li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p>Não há observações registradas.</p>
+                @endif
+            </div>
 
 </body>
 
