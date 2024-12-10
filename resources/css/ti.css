@@ -3,12 +3,11 @@
     --gray-bg: #1f2937;
     --fundo-input: #111827;
     --color-text: #ccd1d6;
-    
 }
-.gray-bg{
+.gray-bg {
     background-color: var(--gray-bg);
 }
-.color-text{
+.color-text {
     color: var(--color-text);
 }
 @media print {
@@ -16,16 +15,14 @@
         margin: 0;
         padding: 0;
         -webkit-print-color-adjust: exact; /* Garante que cores sejam aplicadas */
-        
+
         color: black;
     }
-
-
 
     /* Ajusta margens específicas */
     @page {
         margin: 0;
-        }
+    }
 }
 /* Layout geral */
 .allmid {
@@ -38,7 +35,6 @@
 /* Estilos gerais */
 .title {
     font-size: 1.9rem;
-    color: #d6dee7;
 }
 
 .botao {
@@ -54,29 +50,10 @@
 #table-mes td {
     background-color: white;
 }
-#table-mes td,th{
+#table-mes td,
+th {
     border: 1px solid black;
 }
-.btn-ponto{
+.btn-ponto {
     font-size: 1.8rem;
 }
-/* Estilos específicos */
-/* .chegada {
-    background-color: var(--chegada-cor);
-    color: #fff;
-}
-
-.saida-almoco {
-    background-color: var(--saida-almoco-cor);
-    color: #fff;
-}
-
-.chegada-almoco {
-    background-color: var(--chegada-almoco-cor);
-    color: #fff;
-}
-
-.saida-final {
-    background-color: var(--saida-final-cor);
-    color: #fff;
-} */
