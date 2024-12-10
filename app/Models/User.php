@@ -24,7 +24,8 @@ class User extends Authenticatable
         'cpf',
         'departamento_id',
         'nivel_acesso',
-        'first_login'
+        'first_login',
+        'is_active'
     ];
 
     /**
@@ -64,5 +65,9 @@ class User extends Authenticatable
     public function servicosSupervisor()
     {
         return $this->hasMany(Servico::class, 'supervisor_id');
+    }
+    public function registros()
+    {
+        return $this->hasMany(RegistroPonto::class, 'user_id');
     }
 }
