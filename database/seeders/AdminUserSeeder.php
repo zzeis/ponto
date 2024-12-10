@@ -24,9 +24,9 @@ class AdminUserSeeder extends Seeder
         User::create([
             'name' => 'Administrador',
             'email' => $email,
-            'email_verified_at' => now(),
+
             'password' => Hash::make($password),
-            'remember_token' => Str::random(10),
+
             'nivel_acesso' => 'admin',
             'is_active' => true,
             'first_login' => true, // Forçar troca de senha no primeiro login
