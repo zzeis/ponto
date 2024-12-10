@@ -21,8 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'cpf',
         'departamento_id',
-        'nivel_acesso'
+        'nivel_acesso',
+        'first_login'
     ];
 
     /**
