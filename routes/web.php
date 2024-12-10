@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('admin/horarios/{user}', [AdminDashboardController::class, 'verifyHorarios'])->name('horarios.verificar');
         Route::get('listaEstagiarios', [AdminDashboardController::class, 'listUsersEstagiarios'])->name('listaEstagiarios');
+        Route::put('usuarios/{user}/status', [AdminDashboardController::class, 'toggleUserStatus'])->name('usuarios.status');
         Route::get('criarUsuario', [AdminDashboardController::class, 'createUserview'])->name('usuarios.criar');
         Route::post('saveUsuario', [AdminDashboardController::class, 'createUser'])->name('usuarios.save');
     });
