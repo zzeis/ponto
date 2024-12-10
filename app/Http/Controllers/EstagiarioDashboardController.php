@@ -8,6 +8,6 @@ class EstagiarioDashboardController extends Controller
 {
     public function index()
     {
-        return view('tecnico.dashboard');
+        return view('estagiario.dashboard');
     }
 }
