@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\SupervisorDashboardController;
 use App\Http\Controllers\EstagiarioDashboardController;
+use App\Http\Controllers\UserController;
+use App\Models\RegistroPonto;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +29,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/registro-ponto', [RegistroPontoController::class, 'index'])->name('registro-ponto.index');
     Route::get('/gerar-relatoriomes', [RegistroPontoController::class, 'relatoriomes'])->name('gerarpdf.mes');
@@ -32,12 +39,40 @@ Route::middleware('auth')->group(function () {
     Route::post('/registro-ponto/{tipo}', [RegistroPontoController::class, 'registrar'])->name('registro-ponto.registrar');
 
     // Rotas de admin
-    Route::middleware(['can:viewAny,App\Models\RegistroPonto'])->group(function () {
-        Route::get('/admin/registros-ponto', [RegistroPontoController::class, 'adminIndex'])->name('admin.registros-ponto');
-        Route::get('/admin/relatorio-ponto', [RegistroPontoController::class, 'gerarRelatorio'])->name('admin.relatorio-ponto');
+
+    Route::middleware(['auth', 'check.access.level:admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::middleware(['can:viewAny,App\Models\RegistroPonto'])->group(function () {
+            Route::get('/admin/registros-ponto', [RegistroPontoController::class, 'adminIndex'])->name('admin.registros-ponto');
+            Route::get('/admin/relatorio-ponto', [RegistroPontoController::class, 'gerarRelatorio'])->name('admin.relatorio-ponto');
+        });
+
+        //registro ponto
+        Route::get('horarios/{user}/download', [RegistroPontoController::class, 'downloadRegistrosByUser'])->name('registro-ponto.download');
+        Route::post('registro-ponto/observacao/{data}', [RegistroPontoController::class, 'salvarObservacao'])->name('registro-ponto.observacao');
+        //administração de usuarios
+
+        Route::get('admin/horarios/{user}', [AdminDashboardController::class, 'verifyHorarios'])->name('horarios.verificar');
+        Route::get('listaEstagiarios', [AdminDashboardController::class, 'listUsersEstagiarios'])->name('listaEstagiarios');
+        Route::get('criarUsuario', [AdminDashboardController::class, 'createUserview'])->name('usuarios.criar');
+        Route::post('saveUsuario', [AdminDashboardController::class, 'createUser'])->name('usuarios.save');
     });
 
+
+
     //rotas login 
+    Route::middleware(['auth', 'first.login'])->group(function () {
+        Route::get('/estagiario/dashboard', [EstagiarioDashboardController::class, 'index'])
+            ->name('estagiario.dashboard')
+            ->middleware('check.access.level:estagiario');
+    });
+
+    Route::middleware(['auth','first.login'])->group(function () {
+        Route::get('/first-password-change', [UserController::class, 'showFirstPasswordChangeForm'])
+            ->name('first.password.change');
+        Route::post('/first-password-change', [UserController::class, 'updateFirstPassword'])
+            ->name('first.password.update');
+    });
+
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
         ->name('admin.dashboard')
         ->middleware('check.access.level:admin');
@@ -46,9 +81,7 @@ Route::middleware('auth')->group(function () {
         ->name('supervisor.dashboard')
         ->middleware('check.access.level:supervisor');
 
-    Route::get('/estagiario/dashboard', [EstagiarioDashboardController::class, 'index'])
-        ->name('estagiario.dashboard')
-        ->middleware('check.access.level:estagiario');
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
