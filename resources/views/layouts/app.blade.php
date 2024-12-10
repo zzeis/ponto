@@ -14,12 +14,13 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- css -->
-    <link rel="stylesheet" href="{{ asset('css/ti.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.min.css">
+
+
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.min.css"> --}}
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/css/ti.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com"></script>
+  
 </head>
 
 <body class="font-sans antialiased">
