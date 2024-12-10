@@ -3,7 +3,7 @@
 @section('content')
     <div class="container mx-auto px-4 py-8">
         <form id="createUserForm" action="{{ route('admin.usuarios.save') }}" method="POST"
-            class="max-w-2xl mx-auto gray-bg p-8 rounded-lg shadow-md">
+            class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
             <div>
                 @if ($errors->any())
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
@@ -31,7 +31,7 @@
             @csrf
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block color-text text-sm font-bold mb-2" for="name">
+                    <label class="block text-gray-500 dark:text-gray-400 text-sm font-bold mb-2" for="name">
                         Nome Completo
                     </label>
                     <input type="text" name="name"
@@ -42,7 +42,7 @@
                     @enderror
                 </div>
                 <div>
-                    <label class="block color-text text-sm font-bold mb-2" for="name">
+                    <label class="block text-gray-500 dark:text-gray-400 text-sm font-bold mb-2" for="name">
                         CPF
                     </label>
                     <input type="number" name="cpf"
@@ -55,7 +55,7 @@
                 </div>
 
                 <div>
-                    <label class="block color-text text-sm font-bold mb-2" for="email">
+                    <label class="block text-gray-500 dark:text-gray-400 text-sm font-bold mb-2" for="email">
                         E-mail
                     </label>
                     <input type="email" name="email"
@@ -68,7 +68,7 @@
 
                 <!-- Departamento (opcional) -->
                 <div class="">
-                    <label class="color-text">Secretaria</label>
+                    <label class="text-gray-500 dark:text-gray-400 text-sm font-bold mb-2">Secretaria</label>
                         <select id="departamento_id" name="departamento_id"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('email') border-red-500 @enderror">
 

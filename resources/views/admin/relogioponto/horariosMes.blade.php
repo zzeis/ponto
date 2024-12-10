@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="allmid text-center mt-10">
-        <h1 class="mb-10">Horários de {{ $user->name }}</h1>
+    <div class="allmid text-center bg-white dark:bg-gray-800 ">
+        <h1 class="mb-10 mt-10 title text-gray-500 dark:text-gray-400">Registros de {{ $user->name }}</h1>
 
         <form method="GET" action="{{ route('admin.horarios.verificar', $user) }}">
             <div class="flex gap-4 w-full mb-5">
@@ -28,14 +28,14 @@
                 </div>
                 <div class="">
                     <button type="submit"
-                        class=" py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg w-full text-gray-100">
+                        class=" py-3 px-4 text-gray-500 dark:text-gray-400 pe-9 block w-full border-gray-200 rounded-lg w-full text-gray-600 dark:text-gray-400">
                         Filtrar</button>
 
                 </div>
                 <div>
                     <a href="{{ route('admin.registro-ponto.download', $user) }}?mes={{ request('mes') }}&ano={{ request('ano') }}"
-                        class=" py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg w-full text-gray-100">
-                        <i class="ri-download-line"></i>
+                        class=" py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg w-full text-gray-600 dark:text-gray-400">
+                        <i class="ri-download-line text-gray-500 dark:text-gray-400"></i>
                     </a>
                 </div>
             </div>
@@ -44,12 +44,12 @@
         <table id="table-mes" class="table-auto  border border-gray-400 w-full">
             <thead>
                 <tr>
-                    <th class=" px-4 py-2 text-gray-100">Data</th>
-                    <th class=" px-4 py-2 text-gray-100">Entrada</th>
-                    <th class=" px-4 py-2 text-gray-100">Saída para Almoço</th>
-                    <th class=" px-4 py-2 text-gray-100">Retorno do Almoço</th>
-                    <th class=" px-4 py-2 text-gray-100">Saída Final</th>
-                    <th class=" px-4 py-2 text-gray-100">Observação</th>
+                    <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Data</th>
+                    <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Entrada</th>
+                    <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Saída para Almoço</th>
+                    <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Retorno do Almoço</th>
+                    <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Saída Final</th>
+                    <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Observação</th>
                 </tr>
             </thead>
             <tbody>

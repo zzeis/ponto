@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -838,32 +838,53 @@
                     <a href="{{ route('login') }}"
                         class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Login</a>
 
-                  
+
                 @endauth
             </div>
         @endif
 
-        <div class="max-w-7xl mx-auto p-6 lg:p-8">
-            <div class="flex justify-center">
-                <img src="{{ asset('images/LogoSATI.png') }}" alt="" width="150px" height="150px">
+        <style>
+                .login{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-evenly;
+                    gap:50px;
+                    width: 100%;
+                  
+                    padding: 50px;
+                    align-items: center;
+                    border-radius: 10px;
+                    
+                    
+                }
+                .login img{
+                    width: 40%;
+                    height: 30%;
+                }
+                .titulo{
+                    font-size: 3rem;
+                }
+                .titulo2{
+                    font-size: 2rem;
+                }
+                
+        </style>
+        <div class="max-w-7xl mx-auto p-6 lg:p-8 border">
+            <div class="login bg-white dark:bg-gray-800">
+                <img src="{{ asset('images/LogoSATI.png') }}" alt="" width="" height="">
+
+                <div class=" text-center">
+
+
+                    <p><a class="titulo">Relogio Ponto</a></p>
+
+                    <a href="{{ route('login') }}"
+                        class="titulo2 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Login</a>
+                </div>
             </div>
 
-            <style>
-                .title{
-                    font-size: 1.9rem;
-                    color: white;
-                }
-                .body{
-                    color: white;
-                }
-            </style>
-            <div class="mt-16 text-center">
+            
 
-               
-                <a class="title">Sistema Relogio Ponto</a>
-
-
-            </div>
         </div>
 </body>
 

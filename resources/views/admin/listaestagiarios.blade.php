@@ -1,29 +1,59 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="allmid mt-10 text-center ">
-        <div class="gray-bg  text-center w-full flex flex-col items-center p-10 color-text">
+    <div class="allmid text-center ">
+        <div class=" bg-white dark:bg-gray-800 text-center w-full flex flex-col items-center p-10 color-text">
             <form method="GET" action="{{ route('admin.listaEstagiarios') }}">
                 <input type="text" class="input-search rounded" name="search" placeholder="Buscar estagiário">
-                <button type="submit" class="pl-2 text-xl"><i class="ri-menu-search-line"></i></button>
+                <button type="submit" class="pl-2 text-xl text-gray-500 dark:text-gray-400"><i
+                        class="ri-menu-search-line"></i></button>
             </form>
 
-            @foreach ($estagiarios as $estagiario)
-                <div class="flex gap-2 mt-5">
-                    <p class="bg-gray-200 p-2 rounded text-gray-800"> {{ $estagiario->name }}</p>
-                    <form action="" method="POST">
-                        @method('PUT')
-                        <button type="submit" class="bg-gray-500 p-2 rounded">
-                            {{ $estagiario->is_active ? 'Desativar' : 'Ativar' }}
-                        </button>
-                    </form>
-                    <a class="bg-gray-600 p-2 rounded" href="{{ route('admin.horarios.verificar', $estagiario) }}">
-                        Verificar Horários
-                    </a>
+            <div class="py-6">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="overflow-hidden shadow sm:rounded-lg bg-white dark:bg-gray-800">
+                        <table class="min-w-full border-collapse border border-gray-200 dark:border-gray-700">
+                            <thead>
+                                <tr class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                    <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Nome</th>
+                                    <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Status</th>
+                                    <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($estagiarios as $estagiario)
+                                    <tr
+                                        class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                            {{ $estagiario->name }}
+                                        </td>
+                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                            {!! $estagiario->is_active ? '<i class="ri-check-line"></i>' : '<i class="ri-lock-line"></i>' !!}
+                                        </td>
+                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2 flex gap-2">
+                                            <form  action="{{ route('admin.usuarios.status', $estagiario) }}" method="POST">
+                                                @method('PUT')
+                                                @csrf
+                                                <button type="submit"
+                                                    class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded">
+                                                    {!! $estagiario->is_active ? '<i class="ri-lock-line"></i>' : '<i class="ri-check-fill"></i>' !!}
+                                                </button>
+                                            </form>
+                                            <a href="{{ route('admin.horarios.verificar', $estagiario) }}"
+                                                class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded">
+                                                <i class="ri-file-edit-line"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            @endforeach
+            </div>
+
             <!-- Links de paginação -->
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center mt-4">
                 {{ $estagiarios->links() }}
             </div>
         </div>
