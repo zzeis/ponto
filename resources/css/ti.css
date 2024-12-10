@@ -1,9 +1,15 @@
 /* Variáveis de cores */
 :root {
-    --chegada-cor: #006300;
-    --saida-almoco-cor: #009000;
-    --chegada-almoco-cor: #00be00;
-    --saida-final-cor: #15ee00;
+    --gray-bg: #1f2937;
+    --fundo-input: #111827;
+    --color-text: #ccd1d6;
+    
+}
+.gray-bg{
+    background-color: var(--gray-bg);
+}
+.color-text{
+    color: var(--color-text);
 }
 @media print {
     body {
