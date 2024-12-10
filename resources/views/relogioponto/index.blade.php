@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="allmid  mt-10">
-        <div class="gray-bg p-10 text-center rounded">
-            <h1 class="text-center mt-10 title">Registrar Horário</h1>
+        <div class=" p-10  bg-white dark:bg-gray-800  text-center rounded">
+            <h1 class="text-center mt-10 title text-gray-600 dark:text-gray-400">Registrar Horário</h1>
 
             @if (session('success'))
                 <div class="alert alert-success">
@@ -58,24 +58,25 @@
             </style>
 
 
-            <a href="{{ route('gerarpdf.mes') }}" class="botao text-center align-items-center "><i
-                    class="ri-printer-line text-center"></i></a>
+            <a href="{{ route('gerarpdf.mes') }}"
+                class="botao text-gray-600 dark:text-gray-400 text-center align-items-center "><i
+                    class="ri-printer-line text-center text-gray-600 dark:text-gray-400"></i></a>
 
 
 
 
 
             <div class="mt-8">
-                <h3 class="mb-4 text-gray-100">Registros do Mês</h3>
+                <h3 class="mb-4 text-gray-600 dark:text-gray-400">Registros do Mês</h3>
                 <table id="table-mes" class="table-auto  border border-gray-400 w-full">
                     <thead>
                         <tr>
-                            <th class=" px-4 py-2 text-gray-100">Data</th>
-                            <th class=" px-4 py-2 text-gray-100">Entrada</th>
-                            <th class=" px-4 py-2 text-gray-100">Saída para Almoço</th>
-                            <th class=" px-4 py-2 text-gray-100">Retorno do Almoço</th>
-                            <th class=" px-4 py-2 text-gray-100">Saída Final</th>
-                            <th class=" px-4 py-2 text-gray-100">Assinatura</th>
+                            <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Data</th>
+                            <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Entrada</th>
+                            <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Saída para Almoço</th>
+                            <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Retorno do Almoço</th>
+                            <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Saída Final</th>
+                            <th class=" px-4 py-2 text-gray-600 dark:text-gray-400">Assinatura</th>
                         </tr>
                     </thead>
                     <tbody>
