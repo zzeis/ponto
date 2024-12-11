@@ -2,7 +2,8 @@
 
 @section('content')
     <div class=" allmid ">
-        <div class="row  mt-10 justify-content-center  rounded gray-bg color-text color-text p-10">
+        <div
+            class="row text-gray-600 dark:text-gray-400  mt-10 justify-content-center  rounded bg-white dark:bg-gray-800 p-10">
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
                     <strong>Erro!</strong> Por favor, Revise os erros abaixo.

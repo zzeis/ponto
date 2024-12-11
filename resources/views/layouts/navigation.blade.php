@@ -21,8 +21,8 @@
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                             {{ __('Dashboard Admin') }}
                         </x-nav-link>
-                    @elseif(Auth::user()->nivel_acesso == 'coordenador')
-                        <x-nav-link :href="route('coordenador.dashboard')" :active="request()->routeIs('coordenador.dashboard')">
+                    @elseif(Auth::user()->nivel_acesso == 'supervisor')
+                        <x-nav-link :href="route('supervisor.dashboard')" :active="request()->routeIs('coordenador.dashboard')">
                             {{ __('Dashboard ') }}
                         </x-nav-link>
                     @endif
