@@ -10,4 +10,7 @@ class SupervisorDashboardController extends Controller
     {
         return view('supervisor.dashboard');
     }
+
+
+    
 }
