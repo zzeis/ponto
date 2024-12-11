@@ -142,19 +142,18 @@ class RegistroPontoController extends Controller
     {
         $this->authorize('viewAny', RegistroPonto::class);
 
-        $registros = RegistroPonto::with('user')
-            ->when($request->mes, function ($query) use ($request) {
-                return $query->whereMonth('data', $request->mes);
-            })
-            ->when($request->ano, function ($query) use ($request) {
-                return $query->whereYear('data', $request->ano);
-            })
-            ->orderBy('data')
-            ->orderBy('hora')
-            ->get()
-            ->groupBy(['user.name', 'data']);
+    
+        $query = User::where('nivel_acesso', 'estagiario');
+        
+        if ($request->has('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
 
-        return view('admin.registros_ponto', compact('registros'));
+        $estagiarios = $query->paginate(10);
+        return view('admin.listaestagiarios', compact('estagiarios'));
     }
 
     public function salvarObservacao(Request $request, $data)
@@ -163,15 +162,26 @@ class RegistroPontoController extends Controller
             'observacao' => 'nullable|string',
         ]);
 
-        // Atualize ou crie a observação no registro do dia
+        // Obtém o registro do ponto para a data fornecida
         $registro = RegistroPonto::where('data', $data)->first();
 
         if ($registro) {
+            // Obtém o usuário associado ao registro
+            $usuarioRegistro = User::find($registro->user_id);
+
+            // Verifica se o departamento do usuário logado é o mesmo do usuário associado ao registro
+            if (auth()->user()->departamento_id !== $usuarioRegistro->departamento_id) {
+                return back()->with('error', 'Você não tem permissão para alterar a observação deste usuário.');
+            }
+
+            // Atualiza a observação se a validação passar
             $registro->observacao = $request->observacao;
             $registro->save();
+
+            return back()->with('success', 'Observação salva com sucesso.');
         }
 
-        return back()->with('success', 'Observação salva com sucesso.');
+        return back()->with('error', 'Registro não encontrado.');
     }
 
     // Gerar relatório consolidado
