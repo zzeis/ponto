@@ -116,7 +116,7 @@
                             </option>
                             <option value="supervisor" {{ old('role') === 'supervisor' ? 'selected' : '' }}>Supervisor
                             </option>
-                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                
                         </select>
                         @error('role')
                             <p class="text-red-500 text-xs italic">{{ $message }}</p>
