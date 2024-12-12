@@ -844,30 +844,33 @@
         @endif
 
         <style>
-                .login{
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-evenly;
-                    gap:50px;
-                    width: 100%;
-                  
-                    padding: 50px;
-                    align-items: center;
-                    border-radius: 10px;
-                    
-                    
-                }
-                .login img{
-                    width: 40%;
-                    height: 30%;
-                }
-                .titulo{
-                    font-size: 3rem;
-                }
-                .titulo2{
-                    font-size: 2rem;
-                }
-                
+            .login {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-evenly;
+                gap: 50px;
+                flex-wrap: wrap;
+                width: 100%;
+
+                padding: 50px;
+                align-items: center;
+                border-radius: 10px;
+
+
+            }
+
+            .login img {
+                width: 40%;
+                height: 30%;
+            }
+
+            .titulo {
+                font-size: 3rem;
+            }
+
+            .titulo2 {
+                font-size: 2rem;
+            }
         </style>
         <div class="max-w-7xl mx-auto p-6 lg:p-8 border">
             <div class="login bg-white dark:bg-gray-800">
@@ -883,7 +886,7 @@
                 </div>
             </div>
 
-            
+
 
         </div>
 </body>
