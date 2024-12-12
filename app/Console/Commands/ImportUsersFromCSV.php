@@ -46,7 +46,6 @@ class ImportUsersFromCSV extends Command
             User::create([
                 'employee_code' => $row['employee_code'],
                 'name' => $row['name'],
-                'email' => strtolower(str_replace(' ', '_', $row['name'])) . '@example.com', // Exemplo de email
                 'cpf' => $row['cpf'],
                 'password' => Hash::make($row['cpf']), // Hash do CPF como senha
                 'secretaria' => $row['Secretaria'],
