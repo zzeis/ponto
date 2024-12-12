@@ -121,7 +121,7 @@ class AdminDashboardController extends Controller
             'cpf' => $validated['cpf'],
             'employee_code' => $validated['employee_code'],
             'local' => $validated['local'],
-            'departamentp_id' => $validated['departamento_id'],
+            'departamento_id' => $validated['departamento_id'],
             'password' => Hash::make($cpf),
             'nivel_acesso' => $nivelAcesso,
             'first_login' => true,
