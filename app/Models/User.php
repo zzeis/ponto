@@ -25,7 +25,10 @@ class User extends Authenticatable
         'departamento_id',
         'nivel_acesso',
         'first_login',
-        'is_active'
+        'is_active',
+        'secretaria',
+        'local', 
+        'employee_code'
     ];
 
     /**
