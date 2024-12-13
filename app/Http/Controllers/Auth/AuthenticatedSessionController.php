@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -26,6 +27,16 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
+
+        // Verificação adicional de is_active
+        $user = Auth::user();
+        if (!$user->is_active) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => __('Sua conta está desativada. Por favor entre em contato com um administrador.'),
+            ]);
+        }
 
         $request->session()->regenerate();
 
