@@ -6,6 +6,8 @@ namespace App\Models;
 
 use App\Notifications\CustomResetPasswordNotification;
 use App\Notifications\CustomVerifyEmailNotification;
+use App\Notifications\VerifyEmailNotification;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -31,7 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'first_login',
         'is_active',
         'secretaria',
-        'local', 
+        'local',
         'employee_code'
     ];
 
@@ -78,14 +80,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(RegistroPonto::class, 'user_id');
     }
 
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new CustomVerifyEmailNotification);
-    }
+
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new CustomResetPasswordNotification($token));
+        $this->notify((new CustomResetPasswordNotification($token))->onQueue('redis'));
     }
-
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify((new VerifyEmailNotification())->onQueue('redis'));
+    }
 }
