@@ -1,18 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <div class="allmid  mt-10">
         <div class=" p-10  bg-white dark:bg-gray-800  text-center rounded">
             <h1 class="text-center mt-10 title text-gray-600 dark:text-gray-400">Registrar Horário</h1>
 
             @if (session('success'))
-                <div class="alert alert-success">
+                <script>
+                    Swal.fire({
+                        title: "Registro Efetuado",
+                        icon: "info",
+                        text: "Atenção, verifique antes de registrar novamente",
+                        confirmButtonText: "OK",
+
+                        showCloseButton: true
+                    });
+                </script>
+                <div class="relative flex flex-col w-full p-3 text-sm text-gray-600 dark:text-gray-400 rounded-md">
                     {{ session('success') }}
                 </div>
             @endif
 
             @if (session('error'))
-                <div class="alert alert-danger">
+                <div class="mb-4 relative flex w-full p-3 text-sm text-white bg-red-600 rounded-md">
                     {{ session('error') }}
                 </div>
             @endif
@@ -105,7 +117,6 @@
             </div>
 
 
-
         </div>
     </div>
     </div>
@@ -115,6 +126,9 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+
+
+
             const tiposRegistro = @json(array_keys($tiposRegistro));
 
             $('.botao-registro form').on('submit', function(e) {
@@ -130,6 +144,7 @@
                     success: function(response) {
                         // Esconde botão atual
                         form.closest('.botao-registro').addClass('hidden1');
+
 
                         // Identifica próximo botão na sequência
                         var tipoAtual = form.data('tipo');
