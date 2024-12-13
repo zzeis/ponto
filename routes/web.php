@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\SupervisorDashboardController;
 use App\Http\Controllers\EstagiarioDashboardController;
 use App\Http\Controllers\UserController;
+use App\Jobs\SendEmailJob;
 use App\Models\RegistroPonto;
 
 
@@ -25,6 +26,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
+Route::get('/test-email', function () {
+    $emailData = [
+        'to' => 'posygame@gmail.com',
+        'subject' => 'Teste de Email',
+        'body' => 'Este é um email enviado pelo RelogioPonto com fila!',
+    ];
+
+    SendEmailJob::dispatch($emailData);
+
+    return 'Email enviado para a fila!';
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -32,7 +47,7 @@ Route::get('/dashboard', function () {
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','user.active'])->group(function () {
 
 
 
@@ -60,8 +75,10 @@ Route::middleware(['check.access.level:supervisor,admin'])->group(function () {
         
 
         //registro ponto 
-            Route::get('registros-ponto', [RegistroPontoController::class, 'adminIndex'])->name('registros-ponto-all');
-            Route::get('relatorio-ponto', [RegistroPontoController::class, 'gerarRelatorio'])->name('relatorio-ponto');
+            Route::get('registros-ponto', [UserController::class, 'ListEstagiariosUsers'])->name('registros-ponto-all');
+
+            Route::get('user/supervisores', [UserController::class, 'listSupervisoresUsers'])->name('user.supervisor');
+            Route::get('relatorio-ponto', [UserController::class, 'gerarRelatorio'])->name('relatorio-ponto');
         
 
         //administração de usuarios
@@ -98,7 +115,7 @@ Route::middleware(['check.access.level:supervisor,admin'])->group(function () {
 
 
 
-
+   
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
