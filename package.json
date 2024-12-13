@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "dotenv": "^16.4.7",
-        "remixicon": "^4.5.0"
+        "remixicon": "^4.5.0",
+        "sweetalert2": "^11.14.5"
     }
 }
