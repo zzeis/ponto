@@ -1,22 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="allmid  mt-10">
         <div class=" p-10  bg-white dark:bg-gray-800  text-center rounded">
             <h1 class="text-center mt-10 title text-gray-600 dark:text-gray-400">Registrar Horário</h1>
 
             @if (session('success'))
                 <script>
-
-                    
-                    Swal.fire({
-                        title: "Registro Efetuado",
-                        icon: "info",
-                        text: "Atenção, verifique antes de registrar novamente",
-                        confirmButtonText: "OK",
-
-                        showCloseButton: true
+                    document.addEventListener('DOMContentLoaded', function() {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: "Registro Efetuado",
+                                icon: "info",
+                                text: "Atenção, verifique antes de registrar novamente",
+                                confirmButtonText: "OK",
+                                showCloseButton: true
+                            });
+                        } else {
+                            console.error('SweetAlert2 não está definido!');
+                        }
                     });
                 </script>
                 <div class="relative flex flex-col w-full p-3 text-sm text-gray-600 dark:text-gray-400 rounded-md">
