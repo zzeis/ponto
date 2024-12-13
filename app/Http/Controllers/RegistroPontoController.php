@@ -137,24 +137,8 @@ class RegistroPontoController extends Controller
         return back()->with('success', 'Registro de ponto efetuado com sucesso');
     }
 
-    // Método para admin ver registros de todos os funcionários
-    public function adminIndex(Request $request)
-    {
-        $this->authorize('viewAny', RegistroPonto::class);
-
     
-        $query = User::where('nivel_acesso', 'estagiario');
-        
-        if ($request->has('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                    ->orWhere('email', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        $estagiarios = $query->paginate(10);
-        return view('admin.listaestagiarios', compact('estagiarios'));
-    }
+   
 
     public function salvarObservacao(Request $request, $data)
     {
