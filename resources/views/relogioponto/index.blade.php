@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <div class="allmid  mt-10">
         <div class=" p-10  bg-white dark:bg-gray-800  text-center rounded">
@@ -9,6 +8,8 @@
 
             @if (session('success'))
                 <script>
+
+                    
                     Swal.fire({
                         title: "Registro Efetuado",
                         icon: "info",
