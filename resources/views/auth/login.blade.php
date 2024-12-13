@@ -1,12 +1,13 @@
 <x-guest-layout>
     <!-- Session Status -->
     @if ($errors->any())
-    <div>
-        @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-        @endforeach
-    </div>
-@endif
+        <div>
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+
+    @endif
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
