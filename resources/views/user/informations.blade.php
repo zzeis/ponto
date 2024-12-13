@@ -85,7 +85,6 @@
                     <select id="departamento_id" name="departamento_id"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('email') border-red-500 @enderror">
 
-
                         <option value="{{ $user->departamento_id }}" class="option">{{ $departamento->sigla }}
                             {{ $departamento->nome }} </option>
                         @foreach (\App\Models\Departamento::all() as $departamento)
