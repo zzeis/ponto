@@ -20,9 +20,9 @@ class AdminDashboardController extends Controller
     {
 
         $user =  auth()->user();
-        
+
         $query = User::where('nivel_acesso', 'estagiario');
-         
+
 
         if ($user->nivel_acesso === 'supervisor') {
             $query->where('departamento_id', $user->departamento_id);
