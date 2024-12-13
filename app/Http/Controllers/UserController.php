@@ -15,6 +15,37 @@ class UserController extends Controller
         return view('auth.first-password-change');
     }
 
+    public function ListEstagiariosUsers(Request $request)
+    {
+        
+        $query = User::where('nivel_acesso', 'estagiario');
+        
+        if ($request->has('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $estagiarios = $query->paginate(10);
+        return view('admin.listaestagiarios', compact('estagiarios'));
+    }
+    public function listSupervisoresUsers(Request $request)
+    {
+        
+        $query = User::where('nivel_acesso', 'supervisor');
+        
+        if ($request->has('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $estagiarios = $query->paginate(10);
+        return view('admin.listaestagiarios', compact('estagiarios'));
+    }
+
     public function updateFirstPassword(Request $request)
     {
         $request->validate([
