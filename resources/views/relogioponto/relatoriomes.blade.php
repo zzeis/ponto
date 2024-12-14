@@ -84,7 +84,7 @@
                 <tbody>
                     @foreach ($registros as $data => $registrosDia)
                         <tr>
-                            <td>{{ $data }}</td>
+                            <td class="px-4 py-2">{{ \Carbon\Carbon::parse($data)->format('d/m/Y') }}</td>
                             <td>{{ $registrosDia->where('tipo', 'entrada_manha')->first()?->hora ?? '-' }}</td>
                             <td>{{ $registrosDia->where('tipo', 'saida_almoco')->first()?->hora ?? '-' }}</td>
                             <td>{{ $registrosDia->where('tipo', 'retorno_almoco')->first()?->hora ?? '-' }}</td>
