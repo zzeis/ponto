@@ -13,14 +13,15 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- css -->
 
+    <!-- css -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.min.css"> --}}
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/css/ti.css', 'resources/js/app.js'])
-  
+
 </head>
 
 <body class="font-sans antialiased">
@@ -45,6 +46,9 @@
                 @endif
             </main>
         </div>
+        @stack('scripts')
+ 
+
     </body>
 
     </html>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\RegistrarPontoJob;
 use App\Models\RegistroPonto;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -9,9 +10,18 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RegistroPontoController extends Controller
 {
+
+    private $tiposValidos = [
+        'entrada_manha',
+        'saida_almoco',
+        'retorno_almoco',
+        'saida_fim'
+    ];
+
     public function index()
     {
         // Calcula o início (dia 15 do mês anterior)
@@ -35,6 +45,9 @@ class RegistroPontoController extends Controller
 
         return view('relogioponto.index', compact('registros', 'registrosHoje'));
     }
+
+
+
     public function relatoriomes()
     {
         // Calcula o início (dia 15 do mês anterior)
@@ -117,28 +130,88 @@ class RegistroPontoController extends Controller
             'saida_fim'
         ];
 
-        if (!in_array($tipo, $tiposValidos)) {
-            return back()->with('error', 'Tipo de registro inválido');
+        try {
+            // Validar tipos de registro
+            if (!in_array($tipo, $tiposValidos)) {
+                return response()->json([
+                    'error' => 'Tipo de registro inválido'
+                ], 400);
+            }
+
+            // Verificar se já existe registro deste tipo hoje
+            if (RegistroPonto::existeRegistroHoje($tipo)) {
+                return response()->json([
+                    'error' => 'Registro já efetuado para este período'
+                ], 400);
+            }
+
+            // Dados do registro
+            $data = [
+                'user_id' => auth()->id(),
+                'data' => now()->format('Y-m-d'),
+                'tipo' => $tipo,
+                'hora' => now()->format('H:i:s')
+            ];
+
+            // Enviar job para a fila "pontos"
+            RegistrarPontoJob::dispatch($data)->onQueue('pontos');
+
+            return response()->json([
+                'success' => 'Registro de ponto enviado para processamento',
+                'proximoTipo' => $this->obterProximoTipo($tipo)
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Erro no registro de ponto: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Erro interno ao processar registro'
+            ], 500);
         }
+    }
+    public function atualizarRegistros(Request $request)
+    {
+        try {
+            $tipo = $request->get('tipo');
+            $registros = RegistroPonto::where('user_id', auth()->id())
+                ->whereMonth('data', now()->month)
+                ->whereYear('data', now()->year)
+                ->orderBy('data', 'desc')
+                ->get()
+                ->groupBy('data');
 
-        // Verificar se já existe registro deste tipo hoje
-        if (RegistroPonto::existeRegistroHoje($tipo)) {
-            return back()->with('error', 'Registro já efetuado para este período');
+            // Verifique se o registro do tipo atual está presente
+            $registroEncontrado = RegistroPonto::where('user_id', auth()->id())
+                ->where('data', now()->format('Y-m-d'))
+                ->where('tipo', $tipo)
+                ->exists();
+
+            $html = view('components.registros-tabela', compact('registros'))->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'registroEncontrado' => $registroEncontrado
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Erro ao atualizar registros: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Erro ao atualizar registros'
+            ], 500);
         }
-
-        // Criar registro de ponto
-        RegistroPonto::create([
-            'user_id' => auth()->id(),
-            'data' => now()->format('Y-m-d'),
-            'tipo' => $tipo,
-            'hora' => now()->format('H:i:s')
-        ]);
-
-        return back()->with('success', 'Registro de ponto efetuado com sucesso');
     }
 
-    
-   
+
+    private function obterProximoTipo($tipoAtual)
+    {
+        $indice = array_search($tipoAtual, $this->tiposValidos);
+        return $indice !== false && $indice < count($this->tiposValidos) - 1
+            ? $this->tiposValidos[$indice + 1]
+            : null;
+    }
+
+
+
+
 
     public function salvarObservacao(Request $request, $data)
     {

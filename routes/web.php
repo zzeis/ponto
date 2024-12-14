@@ -28,17 +28,7 @@ Route::get('/', function () {
 
 
 
-Route::get('/test-email', function () {
-    $emailData = [
-        'to' => 'posygame@gmail.com',
-        'subject' => 'Teste de Email',
-        'body' => 'Este é um email enviado pelo RelogioPonto com fila!',
-    ];
 
-    SendEmailJob::dispatch($emailData);
-
-    return 'Email enviado para a fila!';
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -47,24 +37,27 @@ Route::get('/dashboard', function () {
 
 
 
-Route::middleware(['auth','user.active'])->group(function () {
+Route::middleware(['auth', 'user.active'])->group(function () {
 
 
 
     //rotas estagiarios
+    Route::get('/registros/atualizar', [RegistroPontoController::class, 'atualizarRegistros'])
+    ->name('registros.atualizar');
     Route::get('/registro-ponto', [RegistroPontoController::class, 'index'])->name('registro-ponto.index');
-    Route::get('/gerar-relatoriomes', [RegistroPontoController::class, 'relatoriomes'])->name('gerarpdf.mes');
+ 
 
     Route::post('/registro-ponto/{tipo}', [RegistroPontoController::class, 'registrar'])->name('registro-ponto.registrar');
 
+    Route::get('/gerar-relatoriomes', [RegistroPontoController::class, 'relatoriomes'])->name('gerarpdf.mes');
 
-    
-// Rotas para supervisor e admin
-Route::middleware(['check.access.level:supervisor,admin'])->group(function () {
-    Route::get('horarios/{user}', [AdminDashboardController::class, 'verifyHorarios'])->name('horarios.verificar');
-    Route::get('listaEstagiarios', [AdminDashboardController::class, 'listUsersEstagiarios'])->name('listaEstagiarios');
-    Route::post('registro-ponto/observacao/{data}', [RegistroPontoController::class, 'salvarObservacao'])->name('registro-ponto.observacao');
-});
+
+    // Rotas para supervisor e admin
+    Route::middleware(['check.access.level:supervisor,admin'])->group(function () {
+        Route::get('horarios/{user}', [AdminDashboardController::class, 'verifyHorarios'])->name('horarios.verificar');
+        Route::get('listaEstagiarios', [AdminDashboardController::class, 'listUsersEstagiarios'])->name('listaEstagiarios');
+        Route::post('registro-ponto/observacao/{data}', [RegistroPontoController::class, 'salvarObservacao'])->name('registro-ponto.observacao');
+    });
 
     //registro ponto
     Route::get('horarios/{user}/download', [RegistroPontoController::class, 'downloadRegistrosByUser'])->name('registro-ponto.download');
@@ -72,14 +65,14 @@ Route::middleware(['check.access.level:supervisor,admin'])->group(function () {
     // Rotas de admin
 
     Route::middleware(['auth', 'check.access.level:admin'])->prefix('admin')->name('admin.')->group(function () {
-        
+
 
         //registro ponto 
-            Route::get('registros-ponto', [UserController::class, 'ListEstagiariosUsers'])->name('registros-ponto-all');
+        Route::get('registros-ponto', [UserController::class, 'ListEstagiariosUsers'])->name('registros-ponto-all');
 
-            Route::get('user/supervisores', [UserController::class, 'listSupervisoresUsers'])->name('user.supervisor');
-            Route::get('relatorio-ponto', [UserController::class, 'gerarRelatorio'])->name('relatorio-ponto');
-        
+        Route::get('user/supervisores', [UserController::class, 'listSupervisoresUsers'])->name('user.supervisor');
+        Route::get('relatorio-ponto', [UserController::class, 'gerarRelatorio'])->name('relatorio-ponto');
+
 
         //administração de usuarios
         Route::put('usuarios/{user}/status', [AdminDashboardController::class, 'toggleUserStatus'])->name('usuarios.status');
@@ -87,7 +80,6 @@ Route::middleware(['check.access.level:supervisor,admin'])->group(function () {
         Route::post('saveUsuario', [AdminDashboardController::class, 'createUser'])->name('usuarios.save');
         Route::put('usuarios/{user}', [UserController::class, 'update'])->name('usuarios.update');
         Route::get('user/infomations/{user}', [UserController::class, 'viewUserInformations'])->name('user.informations');
-
     });
 
 
@@ -115,7 +107,7 @@ Route::middleware(['check.access.level:supervisor,admin'])->group(function () {
 
 
 
-   
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
