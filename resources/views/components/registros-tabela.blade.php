@@ -1,11 +1,11 @@
-<table id="table-mes" >
+<table id="table-mes">
 
     <thead>
-        <th>Data</th>
-        <th>Entrada</th>
-        <th>Saida Almoço</th>
-        <th>Retorno Almoço</th>
-        <th>Saida final</th>
+        <th class=" text-gray-600 dark:text-gray-400">Data</th>
+        <th class="text-gray-600 dark:text-gray-400">Entrada</th>
+        <th class="text-gray-600 dark:text-gray-400">Saida Almoço</th>
+        <th class="text-gray-600 dark:text-gray-400">Retorno Almoço</th>
+        <th class="text-gray-600 dark:text-gray-400">Saida final</th>
     </thead>
     @foreach ($registros as $data => $registrosDia)
         <tr>
