@@ -69,7 +69,7 @@
     </div>
 
     <style>
-        .hidden {
+        .hidden1 {
             display: none !important;
         }
 
@@ -125,7 +125,7 @@ Processando...
                             });
 
                             // Esconder botão atual e mostrar próximo
-                            botaoRegistro.classList.add('hidden');
+                            botaoRegistro.classList.add('hidden1');
 
                             const proximoTipo = response.data.proximoTipo;
                             if (proximoTipo) {
