@@ -33,8 +33,8 @@ class RegistroPontoController extends Controller
         // Registros no intervalo especificado para o usuário logado
         $registros = RegistroPonto::where('user_id', auth()->id())
             ->whereBetween('data', [$dataInicio, $dataFim])
-            ->orderBy('data')
-            ->orderBy('hora')
+            ->orderBy('data', 'desc')
+            ->orderBy('hora', 'desc')
             ->get()
             ->groupBy('data');
 
@@ -45,7 +45,6 @@ class RegistroPontoController extends Controller
 
         return view('relogioponto.index', compact('registros', 'registrosHoje'));
     }
-
 
 
     public function relatoriomes()
@@ -131,19 +130,6 @@ class RegistroPontoController extends Controller
         ];
 
         try {
-            // Validar tipos de registro
-            if (!in_array($tipo, $tiposValidos)) {
-                return response()->json([
-                    'error' => 'Tipo de registro inválido'
-                ], 400);
-            }
-
-            // Verificar se já existe registro deste tipo hoje
-            if (RegistroPonto::existeRegistroHoje($tipo)) {
-                return response()->json([
-                    'error' => 'Registro já efetuado para este período'
-                ], 400);
-            }
 
             // Dados do registro
             $data = [
@@ -152,6 +138,27 @@ class RegistroPontoController extends Controller
                 'tipo' => $tipo,
                 'hora' => now()->format('H:i:s')
             ];
+            // Validar tipos de registro
+            if (!in_array($tipo, $tiposValidos)) {
+                return response()->json([
+                    'error' => 'Tipo de registro inválido'
+                ], 400);
+            }
+
+
+            // Verificar se já existe registro deste tipo hoje
+            if (RegistroPonto::existeRegistroHoje($tipo)) {
+                return response()->json([
+                    'error' => 'Registro já efetuado para este período'
+                ], 400);
+            }
+
+            // Verificar intervalo mínimo entre registros
+            if (!$this->verificarIntervaloRegistro($tipo)) {
+                return response()->json([
+                    'error' => 'A tentativa de registro está fora do horário padronizado'
+                ], 400);
+            }
 
             // Enviar job para a fila "pontos"
             RegistrarPontoJob::dispatch($data)->onQueue('pontos');
@@ -167,6 +174,32 @@ class RegistroPontoController extends Controller
             ], 500);
         }
     }
+
+    private function verificarIntervaloRegistro($tipo)
+    {
+        // Buscar o último registro do usuário de qualquer tipo
+        $ultimoRegistro = RegistroPonto::where('user_id', auth()->id())
+            ->where('data', now()->format('Y-m-d'))
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        // Se não há registro anterior, permite o registro
+        if (!$ultimoRegistro) {
+            return true;
+        }
+
+        // Calcular o intervalo entre o último registro e o atual
+        $ultimoRegistroDateTime = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $ultimoRegistro->data . ' ' . $ultimoRegistro->hora
+        );
+
+        $diferencaMinutos = now()->diffInMinutes($ultimoRegistroDateTime);
+
+        // Verifica se passou 1 hora e 30 minutos (90 minutos)
+        return $diferencaMinutos >= 90;
+    }
+
     public function atualizarRegistros(Request $request)
     {
         try {
