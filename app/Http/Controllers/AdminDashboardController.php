@@ -59,7 +59,7 @@ class AdminDashboardController extends Controller
         // Filtra os registros no intervalo de datas
         $registros = RegistroPonto::where('user_id', $user->id)
             ->whereBetween('data', [$dataInicio, $dataFim])
-            ->orderBy('data')
+            ->orderBy('data', 'desc')
             ->orderBy('hora')
             ->get()
             ->groupBy('data');
