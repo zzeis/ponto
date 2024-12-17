@@ -43,9 +43,9 @@ Route::middleware(['auth', 'user.active'])->group(function () {
 
     //rotas estagiarios
     Route::get('/registros/atualizar', [RegistroPontoController::class, 'atualizarRegistros'])
-    ->name('registros.atualizar');
+        ->name('registros.atualizar');
     Route::get('/registro-ponto', [RegistroPontoController::class, 'index'])->name('registro-ponto.index');
- 
+
 
     Route::post('/registro-ponto/{tipo}', [RegistroPontoController::class, 'registrar'])->name('registro-ponto.registrar');
 
@@ -54,6 +54,10 @@ Route::middleware(['auth', 'user.active'])->group(function () {
 
     // Rotas para supervisor e admin
     Route::middleware(['check.access.level:supervisor,admin'])->group(function () {
+
+
+        Route::put('/registro-ponto/update-batch/{user}', [RegistroPontoController::class, 'updateBatch'])->name('registro-ponto.update-batch');
+          
         Route::get('horarios/{user}', [AdminDashboardController::class, 'verifyHorarios'])->name('horarios.verificar');
         Route::get('listaEstagiarios', [AdminDashboardController::class, 'listUsersEstagiarios'])->name('listaEstagiarios');
         Route::post('registro-ponto/observacao/{data}', [RegistroPontoController::class, 'salvarObservacao'])->name('registro-ponto.observacao');
