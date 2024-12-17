@@ -24,17 +24,24 @@ class RegistroPontoController extends Controller
 
     public function index()
     {
-        // Calcula o início (dia 15 do mês anterior)
-        $dataInicio = now()->subMonth()->day(15);
+
+
+        // Define o mês e ano selecionados (ou padrão para o mês e ano atual)
+        $mesSelecionado = now()->month;
+        $anoSelecionado = now()->year;
+
+        // Calcula as datas de início e fim para o intervalo
+        $dataInicio = Carbon::create($anoSelecionado, $mesSelecionado, 15)->startOfDay();
+        $dataFim = $dataInicio->copy()->addMonth()->day(16)->endOfDay();
 
         // Calcula o fim (dia 16 do mês atual)
-        $dataFim = now()->day(16);
+
         $dataHoje = Carbon::today()->format('Y-m-d');
         // Registros no intervalo especificado para o usuário logado
         $registros = RegistroPonto::where('user_id', auth()->id())
             ->whereBetween('data', [$dataInicio, $dataFim])
             ->orderBy('data', 'desc')
-            ->orderBy('hora', 'desc')
+            ->orderBy('hora')
             ->get()
             ->groupBy('data');
 
@@ -43,17 +50,21 @@ class RegistroPontoController extends Controller
             ->pluck('tipo')
             ->toArray();
 
+
         return view('relogioponto.index', compact('registros', 'registrosHoje'));
     }
 
 
     public function relatoriomes()
     {
-        // Calcula o início (dia 15 do mês anterior)
-        $dataInicio = now()->subMonth()->day(15);
+        // Define o mês e ano selecionados (ou padrão para o mês e ano atual)
+        $mesSelecionado = now()->month;
+        $anoSelecionado = now()->year;
 
-        // Calcula o fim (dia 16 do mês atual)
-        $dataFim = now()->day(16);
+        // Calcula as datas de início e fim para o intervalo
+        $dataInicio = Carbon::create($anoSelecionado, $mesSelecionado, 15)->startOfDay();
+        $dataFim = $dataInicio->copy()->addMonth()->day(16)->endOfDay();
+
 
         // Garanta que o usuário está autenticado
         if (!Auth::check()) {
@@ -177,6 +188,11 @@ class RegistroPontoController extends Controller
 
     private function verificarIntervaloRegistro($tipo)
     {
+
+        if ($tipo === 'entrada_manha') {
+            return true;
+        }
+
         // Buscar o último registro do usuário de qualquer tipo
         $ultimoRegistro = RegistroPonto::where('user_id', auth()->id())
             ->where('data', now()->format('Y-m-d'))
@@ -203,11 +219,19 @@ class RegistroPontoController extends Controller
     public function atualizarRegistros(Request $request)
     {
         try {
+
+            $mesSelecionado = now()->month;
+            $anoSelecionado = now()->year;
+
+            // Calcula as datas de início e fim para o intervalo
+            $dataInicio = Carbon::create($anoSelecionado, $mesSelecionado, 15)->startOfDay();
+            $dataFim = $dataInicio->copy()->addMonth()->day(16)->endOfDay();
+
             $tipo = $request->get('tipo');
             $registros = RegistroPonto::where('user_id', auth()->id())
-                ->whereMonth('data', now()->month)
-                ->whereYear('data', now()->year)
-                ->orderBy('data', 'desc')
+                ->whereBetween('data', [$dataInicio, $dataFim])
+                ->orderBy('data')
+                ->orderBy('hora')
                 ->get()
                 ->groupBy('data');
 
