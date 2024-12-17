@@ -94,7 +94,6 @@
                 // Altere para selecionar o botão
                 const botaoSubmit = form.querySelector('button[type="button"]');
 
-
                 botaoSubmit.addEventListener('click', function(e) {
                     e.preventDefault();
 
@@ -102,6 +101,7 @@
                     const tipo = formElement.getAttribute('data-tipo');
                     const url = formElement.getAttribute('action');
                     const botaoRegistro = formElement.closest('.botao-registro');
+                    const textoOriginal = this.innerHTML; // Salva o conteúdo original do botão
 
                     // Desabilitar botão
                     this.disabled = true;
@@ -145,6 +145,8 @@ Processando...
                             this.disabled = false;
                             this.innerHTML =
                                 `<i class="ri-run-line"></i> ${this.textContent.replace('Processando...', '')}`;
+                            this.innerHTML =
+                                textoOriginal; // Restaura o conteúdo original do botão
 
                             Swal.fire({
                                 icon: 'error',
