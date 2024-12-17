@@ -268,7 +268,68 @@ class RegistroPontoController extends Controller
 
 
 
+    public function updateBatch(Request $request, User $user)
+    {
 
+        // Verifica se o departamento do usuário logado é o mesmo do usuário associado ao registro
+
+        if (
+            auth()->user()->nivel_acesso !== 'admin' &&
+            auth()->user()->departamento_id !== $user->departamento_id
+        ) {
+            return back()->with('error', 'Você não tem permissão para alterar os registros deste usuário.');
+        }
+
+
+        $registros = $request->input('registros', []);
+
+
+
+        foreach ($registros as $data => $registro) {
+
+
+            // Entry Morning
+
+            $this->updateOrCreateRegistro($user, $data, 'entrada_manha', $registro['entrada_manha'] ?? null);
+
+            // Lunch Exit
+            $this->updateOrCreateRegistro($user, $data, 'saida_almoco', $registro['saida_almoco'] ?? null);
+
+            // Lunch Return
+            $this->updateOrCreateRegistro($user, $data, 'retorno_almoco', $registro['retorno_almoco'] ?? null);
+
+            // Final Exit
+            $this->updateOrCreateRegistro($user, $data, 'saida_fim', $registro['saida_fim'] ?? null);
+
+            // Observation
+            $this->updateObservacao($user, $data, $registro['observacao'] ?? null);
+        }
+
+        return redirect()->back()->with('success', 'Registros atualizados com sucesso');
+    }
+
+    private function updateOrCreateRegistro(User $user, string $data, string $tipo, ?string $hora)
+    {
+        if ($hora) {
+            RegistroPonto::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'data' => $data,
+                    'tipo' => $tipo
+                ],
+                [
+                    'hora' => $hora
+                ]
+            );
+        }
+    }
+
+    private function updateObservacao(User $user, string $data, ?string $observacao)
+    {
+        RegistroPonto::where('user_id', $user->id)
+            ->where('data', $data)
+            ->update(['observacao' => $observacao]);
+    }
 
     public function salvarObservacao(Request $request, $data)
     {
@@ -283,10 +344,7 @@ class RegistroPontoController extends Controller
             // Obtém o usuário associado ao registro
             $usuarioRegistro = User::find($registro->user_id);
 
-            // Verifica se o departamento do usuário logado é o mesmo do usuário associado ao registro
-            if (auth()->user()->departamento_id !== $usuarioRegistro->departamento_id) {
-                return back()->with('error', 'Você não tem permissão para alterar a observação deste usuário.');
-            }
+
 
             // Atualiza a observação se a validação passar
             $registro->observacao = $request->observacao;
