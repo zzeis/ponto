@@ -15,15 +15,15 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if (Auth::user()->nivel_acesso == 'estagiario')
                         <x-nav-link :href="route('estagiario.dashboard')" :active="request()->routeIs('estagiario.dashboard')">
-                            {{ __('Dashboard ') }}
+                            {{ __('Dashboard') }}
                         </x-nav-link>
                     @elseif(Auth::user()->nivel_acesso == 'admin')
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                             {{ __('Dashboard Admin') }}
                         </x-nav-link>
                     @elseif(Auth::user()->nivel_acesso == 'supervisor')
-                        <x-nav-link :href="route('supervisor.dashboard')" :active="request()->routeIs('coordenador.dashboard')">
-                            {{ __('Dashboard ') }}
+                        <x-nav-link :href="route('supervisor.dashboard')" :active="request()->routeIs('supervisor.dashboard')">
+                            {{ __('Dashboard') }}
                         </x-nav-link>
                     @endif
                 </div>
