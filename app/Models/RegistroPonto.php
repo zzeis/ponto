@@ -14,7 +14,8 @@ class RegistroPonto extends Model
         'user_id',
         'data',
         'tipo',
-        'hora'
+        'hora',
+        'observacao'
     ];
 
     public function user()
