@@ -97,7 +97,7 @@ Para instalar e gerenciar as dependências front-end, usamos o [npm](https://www
 Para processar tarefas em background, este projeto utiliza o sistema de filas do Laravel com Redis como driver.
 
 - O container `app` executa os workers automaticamente com o seguinte comando:
-  ```bash
+```bash
   php artisan queue:work --queue=pontos,redis --sleep=5 --timeout=0 --max-jobs=1000
 
 ```
