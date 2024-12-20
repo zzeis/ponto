@@ -16,7 +16,7 @@ class AdminUserSeeder extends Seeder
     public function run()
     {
         // Dados do usuário admin
-        $cpf = '48540290804'; // Insira o CPF desejado
+        $cpf = '12345678901'; // Insira o CPF desejado
         $email = 'admin@example.com'; // Email do administrador
         $password = 'admin123'; // Senha do administrador
 
