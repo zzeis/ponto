@@ -230,7 +230,7 @@ class RegistroPontoController extends Controller
             $tipo = $request->get('tipo');
             $registros = RegistroPonto::where('user_id', auth()->id())
                 ->whereBetween('data', [$dataInicio, $dataFim])
-                ->orderBy('data')
+                ->orderBy('data','desc')
                 ->orderBy('hora')
                 ->get()
                 ->groupBy('data');
