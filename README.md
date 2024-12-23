@@ -2,7 +2,7 @@
 
 ## Descrição do Projeto
 
-Este é um sistema de Relógio Ponto desenvolvido em Laravel 10, com PHP 8.1, utilizando tecnologias modernas como Vite,Tailwind CSS e Docker. O sistema permite gerenciar registros de ponto de forma eficiente e oferece uma interface moderna e responsiva.
+Este é um sistema de Relógio Ponto desenvolvido em Laravel 10, com PHP 8.1, utilizando tecnologias modernas como Vite,Tailwind CSS ,LiveWire e Docker. O sistema permite gerenciar registros de ponto de forma eficiente e oferece uma interface moderna e responsiva.
 
 
 - Organização por departamentos e seus respectivos supervisores. 
@@ -17,6 +17,7 @@ Este é um sistema de Relógio Ponto desenvolvido em Laravel 10, com PHP 8.1, ut
 - **Composer:** >= 2.5
 - **Docker:** >= 20.x (recomendado para desenvolvimento e produção)
 - **NPM:** >= 8.x
+- **Laravel Livewire:** >= 2.x
 
 
 ## Setup do Ambiente
@@ -26,6 +27,7 @@ Este é um sistema de Relógio Ponto desenvolvido em Laravel 10, com PHP 8.1, ut
 git clone https://github.com/zzeis/relogioponto.git
 cd relogio-ponto
 ```
+
 
 2.  Configure o .env 
 ```bash
@@ -82,7 +84,10 @@ No arquivo `resources/js/app.js`, utilizamos as seguintes bibliotecas para melho
 
 - **Propósito:** Framework CSS utilitário para estilização de componentes com classes simples e reutilizáveis.
 - **Uso no projeto:** Design responsivo e estilização do sistema, incluindo botões, layouts, tabelas e outros elementos visuais.
+### 5. **Livewire**
 
+- **Propósito:** Framework para criar componentes dinâmicos e reativos no Laravel sem a necessidade de JavaScript puro ou frameworks front-end adicionais.
+- **Uso no projeto:** Utilizado para exibir a barra de progresso das horas trabalhadas no dia e realizar atualizações dinâmicas no dashboard sem recarregar a página.
 
 ### Como incluir dependências no projeto
 
@@ -106,7 +111,7 @@ Para processar tarefas em background, este projeto utiliza o sistema de filas do
 ```
 
 Caso precise reiniciar o worker:
-```
+```bash
 docker exec -it app(nome do seu container app) php artisan queue:restart
 ```
 
@@ -120,3 +125,4 @@ docker exec -it app(nome do seu container app) php artisan queue:restart
 - **`database/`**: Scripts de migração e seeders para o banco de dados. 
 - **`dockerfile`**: Configurações específicas para o ambiente Docker.
 - **`docker-compose.yml`**: Configurações específicas para o ambiente Docker, incluindo Nginx,Redis,MySQL, APP, Queue-worker.
+- **`app/Livewire/`**: Contém os componentes dinâmicos criados com Livewire.
