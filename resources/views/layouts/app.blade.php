@@ -20,6 +20,7 @@
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.min.css"> --}}
 
     <!-- Scripts -->
+    <script src="{{ asset('js/working-hours.js') }}"></script>
     @vite(['resources/css/app.css', 'resources/css/ti.css', 'resources/js/app.js'])
 
 </head>
