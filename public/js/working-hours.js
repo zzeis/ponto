@@ -12,8 +12,8 @@ function workingHoursEmoji(initialProgress) {
             if (this.progress === 0) newEmoji = '😴';
             else if (this.progress < 25) newEmoji = '🥱';
             else if (this.progress < 50) newEmoji = '🙂';
-            else if (this.progress < 75) newEmoji = '😅';
-            else if (this.progress <= 100) newEmoji = '😃';
+            else if (this.progress < 85) newEmoji = '😅';
+            else if (this.progress <= 100) newEmoji = '🥳';
             else newEmoji = '🎉';
             
             if (this.emoji !== newEmoji) {
