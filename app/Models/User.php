@@ -61,20 +61,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Departamento::class);
     }
 
-    public function relatorios()
+    public function horarioTrabalho()
     {
-        return $this->hasMany(Relatorio::class);
+        return $this->hasOne(HorariosDefault::class);
     }
 
-    public function servicosTecnico()
+    public function horarioAtual()
     {
-        return $this->hasMany(Servico::class, 'tecnico_id');
+        return $this->horarioTrabalho()
+            ->where('data_inicio', '<=', now())
+            ->where(function ($query) {
+                $query->whereNull('data_fim')
+                    ->orWhere('data_fim', '>=', now());
+            });
     }
 
-    public function servicosSupervisor()
-    {
-        return $this->hasMany(Servico::class, 'supervisor_id');
-    }
     public function registros()
     {
         return $this->hasMany(RegistroPonto::class, 'user_id');
