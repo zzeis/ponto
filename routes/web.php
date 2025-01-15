@@ -57,6 +57,7 @@ Route::middleware(['auth', 'user.active'])->group(function () {
         Route::get('/gerar-relatoriomes', [RegistroPontoController::class, 'relatoriomes'])->name('gerarpdf.mes');
 
         Route::put('/registro-ponto/update-batch/{user}', [RegistroPontoController::class, 'updateBatch'])->name('registro-ponto.update-batch');
+        Route::get('user/infomations/{user}', [UserController::class, 'viewUserInformations'])->name('user.informations');
 
         Route::get('horarios/{user}', [AdminDashboardController::class, 'verifyHorarios'])->name('horarios.verificar');
         Route::get('listaEstagiarios', [AdminDashboardController::class, 'listUsersEstagiarios'])->name('listaEstagiarios');
@@ -83,7 +84,6 @@ Route::middleware(['auth', 'user.active'])->group(function () {
         Route::get('criarUsuario', [AdminDashboardController::class, 'createUserview'])->name('usuarios.criar');
         Route::post('saveUsuario', [AdminDashboardController::class, 'createUser'])->name('usuarios.save');
         Route::put('usuarios/{user}', [UserController::class, 'update'])->name('usuarios.update');
-        Route::get('user/infomations/{user}', [UserController::class, 'viewUserInformations'])->name('user.informations');
     });
 
 
