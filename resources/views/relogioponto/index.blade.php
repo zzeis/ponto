@@ -54,10 +54,7 @@
                 @endforeach
             </div>
 
-            <a href="{{ route('gerarpdf.mes') }}"
-                class="botao text-gray-600 dark:text-gray-400 text-center align-items-center">
-                <i class="ri-printer-line text-center text-gray-600 dark:text-gray-400"></i>
-            </a>
+            
 
             <div class="mt-8">
                 <h3 class="mb-4 text-gray-600 dark:text-gray-400">Registros do Mês</h3>
