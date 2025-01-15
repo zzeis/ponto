@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HorariosDefault;
+use App\Models\HorarioTrabalho;
 use App\Models\RegistroPonto;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AdminDashboardController extends Controller
@@ -105,27 +108,56 @@ class AdminDashboardController extends Controller
     public function createUser(Request $request)
     {
         $cpf = $request->cpf;
-        $validated = $request->validate([
+        $nivelAcesso = $request->get('nivel_acesso', 'estagiario');
+
+        $rules = [
             'name' => 'required|string|max:255',
             'local' => 'string|max:255',
             'email' => 'email|unique:users',
             'cpf' => 'required|size:11|regex:/^\d+$/|unique:users,cpf',
             'employee_code' => 'required|regex:/^\d+$/|unique:users,employee_code',
-            'departamento_id' => 'nullable|exists:departamentos,id', // Validação para o campo de departamento
-        ]);
+            'departamento_id' => 'nullable|exists:departamentos,id',
+        
+        ];
 
-        $nivelAcesso = $request->get('nivel_acesso', 'estagiario');
-        User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'cpf' => $validated['cpf'],
-            'employee_code' => $validated['employee_code'],
-            'local' => $validated['local'],
-            'departamento_id' => $validated['departamento_id'],
-            'password' => Hash::make($cpf),
-            'nivel_acesso' => $nivelAcesso,
-            'first_login' => true,
-        ]);
+        // Regras adicionais para estagiários
+        if ($nivelAcesso === 'estagiario') {
+            $rules = array_merge($rules, [
+                'entrada_manha' => 'required|date_format:H:i',
+                'saida_manha' => 'required|date_format:H:i|after:entrada_manha',
+                'entrada_tarde' => 'required|date_format:H:i|after:saida_manha',
+                'saida_tarde' => 'required|date_format:H:i|after:entrada_tarde',
+            ]);
+        }
+        $validated = $request->validate($rules);
+
+        DB::transaction(function () use ($validated, $nivelAcesso, $cpf) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'cpf' => $validated['cpf'],
+                'employee_code' => $validated['employee_code'],
+                'local' => $validated['local'],
+                'departamento_id' => $validated['departamento_id'],
+                'password' => Hash::make($cpf),
+                'nivel_acesso' => $nivelAcesso,
+                'first_login' => true,
+
+            ]);
+
+            //so criar a tabela horarios se o nivel de acesso
+            //for estagiario
+            if ($nivelAcesso === 'estagiario') {
+                HorariosDefault::create([
+                    'user_id' => $user->id,
+                    'entrada_manha' => $validated['entrada_manha'],
+                    'saida_manha' => $validated['saida_manha'],
+                    'entrada_tarde' => $validated['entrada_tarde'],
+                    'saida_tarde' => $validated['saida_tarde'],
+                    'data_inicio' => now()
+                ]);
+            }
+        });
 
         return back()->with('success', 'Usuário criado com sucesso');
     }
