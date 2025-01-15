@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,8 @@ class RegistroPonto extends Model
         'data',
         'tipo',
         'hora',
-        'observacao'
+        'observacao',
+        'id_super'
     ];
 
     public function user()
@@ -31,4 +33,5 @@ class RegistroPonto extends Model
             ->where('tipo', $tipo)
             ->exists();
     }
+  
 }
