@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\RegistrarPontoJob;
+use App\Models\HorariosDefault;
 use App\Models\RegistroPonto;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -30,20 +31,31 @@ class RegistroPontoController extends Controller
         $mesSelecionado = now()->month;
         $anoSelecionado = now()->year;
 
+        // Verifica se o mês atual é janeiro, para ajustar o intervalo corretamente
+        if ($mesSelecionado == 1) {
+            $mesAnterior = 12;
+            $anoAnterior = $anoSelecionado - 1;
+        } else {
+            $mesAnterior = $mesSelecionado - 1;
+            $anoAnterior = $anoSelecionado;
+        }
+
         // Calcula as datas de início e fim para o intervalo
-        $dataInicio = Carbon::create($anoSelecionado, $mesSelecionado, 15)->startOfDay();
-        $dataFim = $dataInicio->copy()->addMonth()->day(16)->endOfDay();
+        $dataInicio = Carbon::create($anoAnterior, $mesAnterior, 15)->startOfDay();
+        $dataFim = Carbon::create($anoSelecionado, $mesSelecionado, 16)->endOfDay();
 
         // Calcula o fim (dia 16 do mês atual)
 
         $dataHoje = Carbon::today()->format('Y-m-d');
         // Registros no intervalo especificado para o usuário logado
         $registros = RegistroPonto::where('user_id', auth()->id())
+
             ->whereBetween('data', [$dataInicio, $dataFim])
             ->orderBy('data', 'desc')
             ->orderBy('hora')
             ->get()
             ->groupBy('data');
+
 
         $registrosHoje = RegistroPonto::where('user_id', auth()->id())
             ->whereDate('data', $dataHoje)
@@ -61,9 +73,18 @@ class RegistroPontoController extends Controller
         $mesSelecionado = now()->month;
         $anoSelecionado = now()->year;
 
+        // Verifica se o mês atual é janeiro, para ajustar o intervalo corretamente
+        if ($mesSelecionado == 1) {
+            $mesAnterior = 12;
+            $anoAnterior = $anoSelecionado - 1;
+        } else {
+            $mesAnterior = $mesSelecionado - 1;
+            $anoAnterior = $anoSelecionado;
+        }
+
         // Calcula as datas de início e fim para o intervalo
-        $dataInicio = Carbon::create($anoSelecionado, $mesSelecionado, 15)->startOfDay();
-        $dataFim = $dataInicio->copy()->addMonth()->day(16)->endOfDay();
+        $dataInicio = Carbon::create($anoAnterior, $mesAnterior, 15)->startOfDay();
+        $dataFim = Carbon::create($anoSelecionado, $mesSelecionado, 16)->endOfDay();
 
 
         // Garanta que o usuário está autenticado
@@ -171,6 +192,17 @@ class RegistroPontoController extends Controller
                 ], 400);
             }
 
+
+            // Verificar intervalo extra com mensagem personalizada
+            try {
+                $this->verificarIntervaloExtra($tipo);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'error' => $e->getMessage()
+                ], 400);
+            }
+
+
             // Enviar job para a fila "pontos"
             RegistrarPontoJob::dispatch($data)->onQueue('pontos');
 
@@ -178,7 +210,7 @@ class RegistroPontoController extends Controller
                 'success' => 'Registro de ponto enviado para processamento',
                 'proximoTipo' => $this->obterProximoTipo($tipo)
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Erro no registro de ponto: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Erro interno ao processar registro'
@@ -220,20 +252,31 @@ class RegistroPontoController extends Controller
     {
         try {
 
+            // Define o mês e ano selecionados (ou padrão para o mês e ano atual)
             $mesSelecionado = now()->month;
             $anoSelecionado = now()->year;
 
+            // Verifica se o mês atual é janeiro, para ajustar o intervalo corretamente
+            if ($mesSelecionado == 1) {
+                $mesAnterior = 12;
+                $anoAnterior = $anoSelecionado - 1;
+            } else {
+                $mesAnterior = $mesSelecionado - 1;
+                $anoAnterior = $anoSelecionado;
+            }
+
             // Calcula as datas de início e fim para o intervalo
-            $dataInicio = Carbon::create($anoSelecionado, $mesSelecionado, 15)->startOfDay();
-            $dataFim = $dataInicio->copy()->addMonth()->day(16)->endOfDay();
+            $dataInicio = Carbon::create($anoAnterior, $mesAnterior, 15)->startOfDay();
+            $dataFim = Carbon::create($anoSelecionado, $mesSelecionado, 16)->endOfDay();
 
             $tipo = $request->get('tipo');
             $registros = RegistroPonto::where('user_id', auth()->id())
                 ->whereBetween('data', [$dataInicio, $dataFim])
-                ->orderBy('data','desc')
+                ->orderBy('data', 'desc')
                 ->orderBy('hora')
                 ->get()
                 ->groupBy('data');
+
 
             // Verifique se o registro do tipo atual está presente
             $registroEncontrado = RegistroPonto::where('user_id', auth()->id())
@@ -255,6 +298,46 @@ class RegistroPontoController extends Controller
                 'error' => 'Erro ao atualizar registros'
             ], 500);
         }
+    }
+
+    protected function verificarIntervaloExtra($tipo)
+    {
+        $horarioAtual = HorariosDefault::getHorarioAtualByUser(auth()->id());
+
+        if (!$horarioAtual) {
+            throw new \Exception('Usuário não possui horário cadastrado');
+        }
+
+        $horaAtual = Carbon::now();
+        $toleranciaMinutos = 15;
+
+        switch ($tipo) {
+
+
+            case 'saida_almoco':
+                $horaPadrao = Carbon::createFromTimeString($horarioAtual->saida_manha);
+                $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
+
+                if ($horaAtual > $tolerancia) {
+                    throw new \Exception('Hora extra não autorizada no almoço. Tolerância máxima de 15 minutos.');
+                }
+                break;
+
+
+
+            case 'saida_fim':
+                $horaPadrao = Carbon::createFromTimeString($horarioAtual->saida_tarde);
+                $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
+
+                if ($horaAtual > $tolerancia) {
+                    $minutos = $horaAtual->diffInMinutes($horaPadrao);
+                    $this->notificarHoraExtra($minutos);
+                    throw new \Exception("Hora extra não autorizada. Excedeu em {$minutos} minutos.");
+                }
+                break;
+        }
+
+        return true;
     }
 
 
@@ -315,10 +398,12 @@ class RegistroPontoController extends Controller
                 [
                     'user_id' => $user->id,
                     'data' => $data,
-                    'tipo' => $tipo
+                    'tipo' => $tipo,
+
                 ],
                 [
-                    'hora' => $hora
+                    'hora' => $hora,
+                    'id_super' => auth()->user()->id
                 ]
             );
         }
