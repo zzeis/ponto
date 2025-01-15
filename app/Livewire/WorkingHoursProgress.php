@@ -17,12 +17,14 @@ class WorkingHoursProgress extends Component
     
     public function mount(WorkingHoursService $service)
     {
-        $this->updateHours($service);
+        $this->updateHours($service);// Atualiza as horas ao carregar o componente.
     }
     
     public function updateHours(WorkingHoursService $service)
     {
+        // Obtém as horas trabalhadas do serviço.
         $hours = $service->getHours(auth()->id());
+        
         $this->dailyHours = $hours['daily'];
         $this->monthlyHours = $hours['monthly'];
         $this->progressPercentage = min(($this->dailyHours / 6) * 100, 100);
