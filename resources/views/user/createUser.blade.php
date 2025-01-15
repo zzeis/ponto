@@ -110,30 +110,76 @@
                         <label class="block text-gray-600 dark:text-gray-400 text-sm font-bold mb-2" for="role">
                             Nível de Acesso
                         </label>
-                        <select name="nivel_acesso"
+                        <select id="nivel_acesso" name="nivel_acesso"
                             class="shadow text-gray-600 dark:text-gray-400 appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror">
                             <option value="estagiario" {{ old('role') === 'estagiario' ? 'selected' : '' }}>Estagiário
                             </option>
                             <option value="supervisor" {{ old('role') === 'supervisor' ? 'selected' : '' }}>Supervisor
                             </option>
-                
+
                         </select>
                         @error('role')
                             <p class="text-red-500 text-xs italic">{{ $message }}</p>
                         @enderror
                     </div>
                 @endif
+                <div>
+
+                    <div id="horarios" class="grid grid-cols-2 gap-4">
+                        <div>
+                            <x-input-label for="entrada_manha" value="Entrada Manhã" />
+                            <x-text-input id="entrada_manha" name="entrada_manha" type="time" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="saida_manha" value="Saída Almoço" />
+                            <x-text-input id="saida_manha" name="saida_manha" type="time" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="entrada_tarde" value="Retorno Almoço" />
+                            <x-text-input id="entrada_tarde" name="entrada_tarde" type="time" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="saida_tarde" value="Saída" />
+                            <x-text-input id="saida_tarde" name="saida_tarde" type="time" />
+                        </div>
+                    </div>
 
 
-            </div>
-
-
-            <div class="flex items-center justify-between mt-6">
-                <button type="submit"
-                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Criar Usuário
-                </button>
-            </div>
+                    <div class="flex items-center justify-between mt-6">
+                        <button type="submit"
+                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Criar Usuário
+                        </button>
+                    </div>
         </form>
     </div>
+
+    <script>
+        document.getElementById('nivel_acesso').addEventListener('change', function() {
+            var horariosDiv = document.getElementById('horarios');
+            if (this.value === 'estagiario') {
+                horariosDiv.classList.add('flex', 'grid', 'grid-cols-2', 'gap-4');
+                horariosDiv.style.display = 'grid';
+
+
+            } else {
+                horariosDiv.style.display = 'none';
+            }
+        })
+
+        window.onload = function() {
+            var nivelAcesso = document.getElementById('nivel_acesso').value;
+            var horariosDiv = document.getElementById('horarios');
+            if (nivelAcesso === 'estagiario') {
+                horariosDiv.style.display = 'grid';
+                horariosDiv.classList.add('grid', 'grid-cols-2', 'gap-4');
+            } else {
+                horariosDiv.style.display = 'none';
+                horariosDiv.classList.remove('grid', 'grid-cols-2', 'gap-4');
+            }
+        }
+    </script>
 @endsection

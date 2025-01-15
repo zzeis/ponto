@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<div wire:poll.10s class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
     <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
         <h3 class="text-xl font-semibold mb-3 text-gray-600 dark:text-gray-400">Hoje</h3>
         
