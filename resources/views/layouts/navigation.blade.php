@@ -86,9 +86,19 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            @if (Auth::user()->nivel_acesso == 'estagiario')
+            <x-nav-link :href="route('estagiario.dashboard')" :active="request()->routeIs('estagiario.dashboard')">
                 {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+            </x-nav-link>
+        @elseif(Auth::user()->nivel_acesso == 'admin')
+            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                {{ __('Dashboard Admin') }}
+            </x-nav-link>
+        @elseif(Auth::user()->nivel_acesso == 'supervisor')
+            <x-nav-link :href="route('supervisor.dashboard')" :active="request()->routeIs('supervisor.dashboard')">
+                {{ __('Dashboard') }}
+            </x-nav-link>
+        @endif
         </div>
 
         <!-- Responsive Settings Options -->
@@ -99,6 +109,19 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                @if (Auth::user()->nivel_acesso == 'estagiario')
+                <x-responsive-nav-link :href="route('estagiario.dashboard')" :active="request()->routeIs('estagiario.dashboard')">
+                    {{ __('Home') }}
+                </x-responsive-nav-link>
+            @elseif(Auth::user()->nivel_acesso == 'admin')
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    {{ __('Dashboard Admin') }}
+                </x-responsive-nav-link>
+            @elseif(Auth::user()->nivel_acesso == 'supervisor')
+                <x-responsive-nav-link :href="route('supervisor.dashboard')" :active="request()->routeIs('supervisor.dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+            @endif
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>

@@ -12,8 +12,8 @@
 
             <div class="py-6">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="overflow-hidden shadow sm:rounded-lg bg-white dark:bg-gray-800">
-                        <table class="min-w-full border-collapse border border-gray-200 dark:border-gray-700">
+                    <div class="overflow-x-auto shadow rounded bg-white dark:bg-gray-800">
+                        <table class="table-auto border-collapse border border-gray-200 dark:border-gray-700">
                             <thead>
                                 <tr class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                                     <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Nome</th>
@@ -26,13 +26,13 @@
                                 @foreach ($estagiarios as $estagiario)
                                     <tr
                                         class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200">
-                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        <td class=" px-4 py-2 truncate">
                                             {{ $estagiario->name }}
                                         </td>
-                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                        <td class=" px-4 py-2">
                                             {!! $estagiario->is_active ? '<i class="ri-check-line"></i>' : '<i class="ri-lock-line"></i>' !!}
                                         </td>
-                                        <td class="border border-gray-300 dark:border-gray-600 px-4 py-2 flex gap-2">
+                                        <td class=" px-4 py-2 flex gap-2">
                                             @if (auth()->user()->nivel_acesso === 'admin')
                                                 <!-- Só exibe para administradores -->
                                                 <form action="{{ route('admin.usuarios.status', $estagiario) }}"
