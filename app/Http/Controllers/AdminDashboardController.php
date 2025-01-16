@@ -77,7 +77,7 @@ class AdminDashboardController extends Controller
         $dataInicio = now()->subMonth()->day(15);
 
         // Calcula o fim (dia 16 do mês atual)
-        $dataFim = now()->day(16);
+        $dataFim = now()->day(15);
 
 
         // Registros no intervalo especificado para o usuário logado

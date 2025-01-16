@@ -36,7 +36,6 @@ Route::get('/dashboard', function () {
 
 
 
-
 Route::middleware(['auth', 'user.active'])->group(function () {
 
 
@@ -65,7 +64,7 @@ Route::middleware(['auth', 'user.active'])->group(function () {
     });
 
     //registro ponto
-    Route::get('horarios/{user}/download', [RegistroPontoController::class, 'downloadRegistrosByUser'])->name('registro-ponto.download');
+    Route::get('horarios/{user}/download', [AdminDashboardController::class, 'downloadHorariosByMonth'])->name('registro-ponto.download');
 
     // Rotas de admin
 
