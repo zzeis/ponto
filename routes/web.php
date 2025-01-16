@@ -28,6 +28,9 @@ Route::get('/', function () {
 
 
 
+Route::get('/testar-notificacao', [RegistroPontoController::class, 'testarNotificacao']);
+
+
 
 
 Route::get('/dashboard', function () {

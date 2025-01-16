@@ -508,4 +508,23 @@ class RegistroPontoController extends Controller
             ]));
         }
     }
+    public function testarNotificacao()
+    {
+        // Encontre o supervisor
+        $supervisor = User::where('nivel_acesso', 'supervisor')->first();
+
+        // Simule os dados para a notificação
+        $minutosExtras = 20; // minutos de hora extra
+        $funcionario = User::find(2); // ID do funcionário
+
+        // Enviar a notificação manualmente
+        $supervisor->notify(new HoraExtraNaoAutorizada([
+            'funcionario' => $funcionario->name,
+            'minutos' => $minutosExtras,
+            'data' => now()->format('d/m/Y'),
+        ]));
+
+        // Retorna uma mensagem para o teste
+        return "Notificação de hora extra enviada para o supervisor!";
+    }
 }
