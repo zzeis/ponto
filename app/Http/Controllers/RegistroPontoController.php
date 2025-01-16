@@ -7,6 +7,7 @@ use App\Models\HorariosDefault;
 use App\Models\RegistroPonto;
 use App\Models\User;
 use App\Notifications\HoraExtraNaoAutorizada;
+use App\Notifications\NotificarHoraAtraso;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -315,14 +316,16 @@ class RegistroPontoController extends Controller
 
         switch ($tipo) {
 
-            case 'entrada_manha':
-                $horaPadrao = Carbon::createFromTimeString($horarioAtual->entrada_manha);
-                $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
+                // case 'entrada_manha':
+                //     $horaPadrao = Carbon::createFromTimeString($horarioAtual->entrada_manha);
+                //     $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
 
-                if ($horaAtual > $tolerancia) {
-                    throw new \Exception("Entrada permitida até {$tolerancia->format('H:i')}");
-                }
-                break;
+                //     if ($horaAtual > $tolerancia) {
+                //         $minutos = $horaAtual->diffInMinutes($horaPadrao);
+                //         $this->notificarAtraso($minutos);
+                //         throw new \Exception("Entrada permitida até {$tolerancia->format('H:i')}");
+                //     }
+                //     break;
 
             case 'saida_almoco':
                 $horaPadrao = Carbon::createFromTimeString($horarioAtual->saida_manha);
@@ -335,14 +338,16 @@ class RegistroPontoController extends Controller
                 }
                 break;
 
-            case 'retorno_almoco':
-                $horaPadrao = Carbon::createFromTimeString($horarioAtual->entrada_tarde);
-                $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
+                // case 'retorno_almoco':
+                //     $horaPadrao = Carbon::createFromTimeString($horarioAtual->entrada_tarde);
+                //     $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
 
-                if ($horaAtual > $tolerancia) {
-                    throw new \Exception('Atraso não autorizado no retorno do almoço.');
-                }
-                break;
+                //     if ($horaAtual > $tolerancia) {
+                //         $minutos = $horaAtual->diffInMinutes($horaPadrao);
+                //         $this->notificarAtraso($minutos);
+                //         throw new \Exception('Atraso não autorizado no retorno do almoço.');
+                //     }
+                //     break;
 
 
 
@@ -511,6 +516,27 @@ class RegistroPontoController extends Controller
             ]));
         }
     }
+    private function notificarAtraso($minutos)
+    {
+
+        $departamentoFuncionario = auth()->user()->departamento_id;
+
+        // Notifica gestores sobre hora extra não autorizada
+        $supervisores = User::where('nivel_acesso', 'supervisor')
+            ->where('departamento_id', $departamentoFuncionario)
+            ->get();
+
+        foreach ($supervisores as $supervisor) {
+            Notification::send($supervisor, new NotificarHoraAtraso([
+                'funcionario' => auth()->user()->name,
+                'minutos' => $minutos,
+                'data' => now()->format('d/m/Y'),
+                'horario' => now()->format('H:i:s'),
+            ]));
+        }
+    }
+
+
     public function testarNotificacao()
     {
         // Encontre o supervisor
