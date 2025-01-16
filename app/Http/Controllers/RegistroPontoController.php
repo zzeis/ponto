@@ -6,12 +6,14 @@ use App\Jobs\RegistrarPontoJob;
 use App\Models\HorariosDefault;
 use App\Models\RegistroPonto;
 use App\Models\User;
+use App\Notifications\HoraExtraNaoAutorizada;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class RegistroPontoController extends Controller
 {
@@ -313,6 +315,14 @@ class RegistroPontoController extends Controller
 
         switch ($tipo) {
 
+            case 'entrada_manha':
+                $horaPadrao = Carbon::createFromTimeString($horarioAtual->entrada_manha);
+                $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
+
+                if ($horaAtual > $tolerancia) {
+                    throw new \Exception("Entrada permitida até {$tolerancia->format('H:i')}");
+                }
+                break;
 
             case 'saida_almoco':
                 $horaPadrao = Carbon::createFromTimeString($horarioAtual->saida_manha);
@@ -320,6 +330,15 @@ class RegistroPontoController extends Controller
 
                 if ($horaAtual > $tolerancia) {
                     throw new \Exception('Hora extra não autorizada no almoço. Tolerância máxima de 15 minutos.');
+                }
+                break;
+
+            case 'retorno_almoco':
+                $horaPadrao = Carbon::createFromTimeString($horarioAtual->entrada_tarde);
+                $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
+
+                if ($horaAtual > $tolerancia) {
+                    throw new \Exception('Atraso não autorizado no retorno do almoço.');
                 }
                 break;
 
@@ -470,5 +489,23 @@ class RegistroPontoController extends Controller
             });
 
         return view('admin.relatorio_ponto', compact('relatorio'));
+    }
+    private function notificarHoraExtra($minutos)
+    {
+
+        $departamentoFuncionario = auth()->user()->departamento_id;
+
+        // Notifica gestores sobre hora extra não autorizada
+        $supervisor = User::where('nivel_acesso', 'supervisor')
+            ->where('departamento_id', $departamentoFuncionario)
+            ->first();
+
+        if ($supervisor) {
+            Notification::send($supervisor, new HoraExtraNaoAutorizada([
+                'funcionario' => auth()->user()->name,
+                'minutos' => $minutos,
+                'data' => now()->format('d/m/Y')
+            ]));
+        }
     }
 }
