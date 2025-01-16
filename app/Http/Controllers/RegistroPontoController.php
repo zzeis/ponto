@@ -329,6 +329,8 @@ class RegistroPontoController extends Controller
                 $tolerancia = $horaPadrao->copy()->addMinutes($toleranciaMinutos);
 
                 if ($horaAtual > $tolerancia) {
+                    $minutos = $horaAtual->diffInMinutes($horaPadrao);
+                    $this->notificarHoraExtra($minutos);
                     throw new \Exception('Hora extra não autorizada no almoço. Tolerância máxima de 15 minutos.');
                 }
                 break;
@@ -496,15 +498,16 @@ class RegistroPontoController extends Controller
         $departamentoFuncionario = auth()->user()->departamento_id;
 
         // Notifica gestores sobre hora extra não autorizada
-        $supervisor = User::where('nivel_acesso', 'supervisor')
+        $supervisores = User::where('nivel_acesso', 'supervisor')
             ->where('departamento_id', $departamentoFuncionario)
-            ->first();
+            ->get();
 
-        if ($supervisor) {
+        foreach ($supervisores as $supervisor) {
             Notification::send($supervisor, new HoraExtraNaoAutorizada([
                 'funcionario' => auth()->user()->name,
                 'minutos' => $minutos,
-                'data' => now()->format('d/m/Y')
+                'data' => now()->format('d/m/Y'),
+                'horario' => now()->format('H:i:s'),
             ]));
         }
     }
