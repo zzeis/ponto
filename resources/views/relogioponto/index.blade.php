@@ -12,8 +12,8 @@
 @section('content')
     <div class="allmid mt-10">
         <div class="p-10 bg-white dark:bg-gray-800 text-center rounded">
-            <h1 class="text-center mt-10 title text-gray-600 dark:text-gray-400">
-                Registrar Horário
+            <h1 class="text-center mb-4 title text-gray-600 dark:text-gray-400">
+                Relógio Ponto
             </h1>
             @livewire('working-hours-progress')
             @if (session('success'))
@@ -101,7 +101,7 @@
                     // Desabilitar botão
                     this.disabled = true;
                     this.innerHTML = `
-<i class="ri-loader-4-line animate-spin inline-block mr-2"></i>
+<i class="ri-loader-4-line animate-spin text-center mx-auto inline-block mr-2"></i>
 Processando...
 `;
                     axios.post(url, {}, {
