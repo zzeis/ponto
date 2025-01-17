@@ -34,31 +34,18 @@ class RegistroPontoController extends Controller
         $mesSelecionado = now()->month;
         $anoSelecionado = now()->year;
 
-        // Verifica se o mês atual é janeiro, para ajustar o intervalo corretamente
-        if ($mesSelecionado == 1) {
-            $mesAnterior = 12;
-            $anoAnterior = $anoSelecionado - 1;
-        } else {
-            $mesAnterior = $mesSelecionado - 1;
-            $anoAnterior = $anoSelecionado;
-        }
-
-        // Calcula as datas de início e fim para o intervalo
-        $dataInicio = Carbon::create($anoAnterior, $mesAnterior, 15)->startOfDay();
-        $dataFim = Carbon::create($anoSelecionado, $mesSelecionado, 16)->endOfDay();
-
-        // Calcula o fim (dia 16 do mês atual)
+       
+      
 
         $dataHoje = Carbon::today()->format('Y-m-d');
         // Registros no intervalo especificado para o usuário logado
         $registros = RegistroPonto::where('user_id', auth()->id())
 
-            ->whereBetween('data', [$dataInicio, $dataFim])
+            ->whereMonth('data', $mesSelecionado)
             ->orderBy('data', 'desc')
             ->orderBy('hora')
             ->get()
             ->groupBy('data');
-
 
         $registrosHoje = RegistroPonto::where('user_id', auth()->id())
             ->whereDate('data', $dataHoje)
@@ -274,7 +261,7 @@ class RegistroPontoController extends Controller
 
             $tipo = $request->get('tipo');
             $registros = RegistroPonto::where('user_id', auth()->id())
-                ->whereBetween('data', [$dataInicio, $dataFim])
+                ->whereMonth('data', $mesSelecionado )
                 ->orderBy('data', 'desc')
                 ->orderBy('hora')
                 ->get()
