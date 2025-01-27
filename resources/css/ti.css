@@ -47,13 +47,7 @@
     color: white;
 }
 
-#table-mes td {
-    background-color: white;
-}
-#table-mes td,
-th {
-    border: 1px solid black;
-}
+
 .btn-ponto {
     font-size: 1.8rem;
 }
