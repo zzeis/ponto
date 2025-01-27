@@ -1,4 +1,4 @@
- <div class="overflow-x-auto shadow rounded-sm bg-white dark:bg-gray-800">
+ <div class="overflow-x-auto w-96 md:w-full shadow rounded-sm bg-white dark:bg-gray-800">
      <table id="table-mes" class="table-auto  border-collapse border border-gray-200 dark:border-gray-700">
 
          <thead>
@@ -21,7 +21,7 @@
              </tr>
          </thead>
          @foreach ($registros as $data => $registrosDia)
-             <tr  class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200">
+             <tr  class="dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-400">
                  <td class="px-4 py-2">{{ \Carbon\Carbon::parse($data)->format('d/m/Y') }}</td>
                  <td class="px-4 py-2 ">
                      {{ $registrosDia->where('tipo', 'entrada_manha')->first()?->hora ?? '-' }}

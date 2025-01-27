@@ -1,8 +1,8 @@
-<div wire:poll.10s class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
+<div wire:poll.10s class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 w-64 md:w-full">
+    <div class=" bg-gray-100 dark:bg-gray-700  sm:p-6 rounded-lg">
         <h3 class="text-xl font-semibold mb-3 text-gray-600 dark:text-gray-400">Hoje</h3>
         
-        <div class="flex flex-col items-center mb-4">
+        <div class="flex flex-col items-center mb-4 p-2 justify-center text-center">
             
             <div 
                 x-data="workingHoursEmoji({{$progressPercentage}})" 
@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
+    <div class="bg-gray-100 dark:bg-gray-700 p-4 sm:p-6 rounded-lg">
         <h3 class="text-xl font-semibold mb-3 text-gray-600 dark:text-gray-400">Este Mês</h3>
         <div class="flex justify-between items-center">
             <span class="text-gray-600 dark:text-gray-400">Total:</span>
