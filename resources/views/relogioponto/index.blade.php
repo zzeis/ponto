@@ -11,7 +11,7 @@
 
 @section('content')
     <div class="allmid mt-10">
-        <div class="p-10 bg-white dark:bg-gray-800 text-center rounded">
+        <div class="p-10 flex flex-col justify-center text-center items-center bg-white dark:bg-gray-800 text-center rounded">
             <h1 class="text-center mb-4 title text-gray-600 dark:text-gray-400">
                 Relógio Ponto
             </h1>
@@ -28,9 +28,9 @@
                 </div>
             @endif
 
-            <div id="botoes-ponto">
+            <div class="" id="botoes-ponto">
                 @foreach ($tiposRegistro as $tipo => $label)
-                    <div class="botao-registro
+                    <div class="botao-registro 
                     @if ($tipo == 'entrada_manha' && !in_array('entrada_manha', $registrosHoje)) btn-ativo 
                     @elseif(
                         ($tipo == 'saida_almoco' &&
@@ -46,7 +46,7 @@
                             data-tipo="{{ $tipo }}" onsubmit="return false;" id="form-{{ $tipo }}">
                             @csrf
                             <button type="button"
-                                class="btn-ponto text-center mt-4 mb-4 inline-flex items-center px-6 py-3 text-gray-500 bg-gray-100 rounded-md hover:bg-gray-200 hover:text-gray-600">
+                                class="w-64 md:w-full text-center mt-4 mb-4 flex flex-row justify-center items-center px-6 py-3 text-gray-500 bg-gray-100 rounded-md hover:bg-gray-300 hover:text-gray-600">
                                 <i class="ri-run-line"></i> {{ $label }}
                             </button>
                         </form>
