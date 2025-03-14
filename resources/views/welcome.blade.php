@@ -73,7 +73,7 @@
                                     SatiAPP
                                 </h3>
                                 <p class="mt-3 text-base text-gray-500 dark:text-gray-300">
-                                    Sistema de gerenciamento de aplicações SATI
+                                    Sistema de gerenciamento de equipamentos 
                                 </p>
                             </div>
                             <div class="mt-6">
