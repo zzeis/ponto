@@ -8,7 +8,8 @@
         @if (isset($horasExtrasTotal))
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div class="bg-white dark:bg-gray-700 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-600">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Relatório de Horas - {{ $user->name }}</h2>
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Relatório de Horas -
+                        {{ $user->name }}</h2>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-600">
                             <span class="text-gray-600 dark:text-gray-300">Total de dias com horas extras:</span>
@@ -16,35 +17,51 @@
                         </div>
                         <div class="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-600">
                             <span class="text-gray-600 dark:text-gray-300">Total de horas extras:</span>
-                            <span class="font-medium text-gray-800 dark:text-gray-200">{{ number_format($horasExtrasTotal, 2) }} horas</span>
+                            <span
+                                class="font-medium text-gray-800 dark:text-gray-200">{{ number_format($horasExtrasTotal, 2) }}
+                                horas</span>
                         </div>
                         @if ($diasExtras > 0)
-                            <div class="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-600">
+                            <div
+                                class="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-600">
                                 <span class="text-gray-600 dark:text-gray-300">Equivalente a:</span>
-                                <span class="font-medium text-gray-800 dark:text-gray-200">{{ $diasExtras }} dia(s) e {{ number_format($horasExtrasRestantes, 2) }} horas</span>
+                                <span class="font-medium text-gray-800 dark:text-gray-200">{{ $diasExtras }} dia(s) e
+                                    {{ number_format($horasExtrasRestantes, 2) }} horas</span>
                             </div>
                         @endif
                     </div>
                 </div>
 
                 @if (count($detalhamentoHorasExtras) > 0)
-                    <div class="bg-white dark:bg-gray-700 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-600">
-                        <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Detalhamento de Horas Extras</h2>
+                    <div
+                        class="bg-white dark:bg-gray-700 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-600">
+                        <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Detalhamento de Horas Extras
+                        </h2>
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
                                     <tr class="bg-gray-50 dark:bg-gray-600 text-left">
-                                        <th class="px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-200 rounded-tl-lg">Data</th>
-                                        <th class="px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-200">Horas Trabalhadas</th>
-                                        <th class="px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-200 rounded-tr-lg">Horas Extras</th>
+                                        <th
+                                            class="px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-200 rounded-tl-lg">
+                                            Data</th>
+                                        <th class="px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-200">Horas
+                                            Trabalhadas</th>
+                                        <th
+                                            class="px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-200 rounded-tr-lg">
+                                            Horas Extras</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($detalhamentoHorasExtras as $detalhe)
-                                        <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600/30">
-                                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{{ $detalhe['data'] }}</td>
-                                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{{ $detalhe['horasTrabalhadas'] }}</td>
-                                            <td class="px-4 py-3 text-sm font-medium text-emerald-600 dark:text-emerald-400">{{ $detalhe['horasExtras'] }}</td>
+                                        <tr
+                                            class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600/30">
+                                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $detalhe['data'] }}</td>
+                                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $detalhe['horasTrabalhadas'] }}</td>
+                                            <td
+                                                class="px-4 py-3 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                                                {{ $detalhe['horasExtras'] }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -58,38 +75,46 @@
         <x-sweetalert />
 
         <!-- Filter Controls -->
-        <form method="GET" action="{{ route('horarios.verificar', $user) }}" class="mb-6">
+        <form method="GET" id="filtrar" action="{{ route('horarios.verificar', $user) }}" class="mb-6">
             <div class="flex flex-wrap gap-4 items-center">
                 <div class="w-full sm:w-auto flex-1 sm:flex-none">
-                    <label for="mes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mês</label>
-                    <select id="mes" name="mes" class="w-full py-2.5 px-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" onchange="this.form.submit()">
-                        @foreach (range(1, 12) as $m)
-                            <option value="{{ $m }}" {{ request('mes', now()->month) == $m ? 'selected' : '' }}>
-                                {{ now()->month($m)->translatedFormat('F') }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <label for="mes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data
+                        Inicial</label>
+                    <input id="mes" type="date" value="{{ request('data_inicial') }}" name="data_inicial"
+                        class="w-full py-2.5 px-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" />
+
+
+
                 </div>
-                <div class="w-full sm:w-auto flex-1 sm:flex-none">
-                    <label for="ano" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ano</label>
-                    <select id="ano" name="ano" class="w-full py-2.5 px-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" onchange="this.form.submit()">
-                        @foreach (range(now()->year - 2, now()->year + 1) as $y)
-                            <option value="{{ $y }}" {{ request('ano', now()->year) == $y ? 'selected' : '' }}>
-                                {{ $y }}
-                            </option>
-                        @endforeach
-                    </select>
+                <div class="">
+                    <label for="mes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data
+                        Final</label>
+                    <input id="mes" type="date" value="{{ request('data_final') }}" name="data_final"
+                        class="w-full py-2.5 px-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" />
+
                 </div>
+
                 <div class="flex items-end gap-2 mt-auto">
-                    <a href="{{ route('registro-ponto.download', $user) }}?mes={{ request('mes') }}&ano={{ request('ano') }}" class="flex items-center justify-center h-11 px-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-colors">
+
+                    <button form="filtrar"
+                        class="flex items-center justify-center h-11 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+
+                        <i class="ri-filter-3-line mr-2"></i>
+                        <span> Filtrar</span>
+                    </button>
+
+                    <a href="{{ route('registro-ponto.download', $user) }}?data_inicial={{ request('data_inicial') }}&data_final={{ request('data_final') }}"
+                        class="flex items-center justify-center h-11 px-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-colors">
                         <i class="ri-download-line mr-2"></i>
                         <span>Download</span>
                     </a>
-                    <button type="submit" form="registros" class="flex items-center justify-center h-11 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                    <button type="submit" form="registros"
+                        class="flex items-center justify-center h-11 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                         <i class="ri-save-3-fill mr-2"></i>
                         <span>Salvar</span>
                     </button>
                 </div>
+
             </div>
         </form>
 
@@ -103,15 +128,20 @@
                         <tr>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Data</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Entrada</th>
-                            <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Saída para Almoço</th>
-                            <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Retorno do Almoço</th>
-                            <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Saída Final</th>
-                            <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Observação</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Saída para
+                                Almoço</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Retorno do
+                                Almoço</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Saída Final
+                            </th>
+                            <th scope="col" class="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">Observação
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($registros as $data => $registrosDia)
-                            <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <tr
+                                class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                 <td class="px-6 py-4 font-medium whitespace-nowrap">
                                     {{ \Carbon\Carbon::parse($data)->format('d/m/Y') }}
                                 </td>
@@ -136,7 +166,7 @@
                                         class="w-full py-2 px-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 </td>
                                 <td class="px-6 py-4">
-                                    <textarea name="registros[{{ $data }}][observacao]" rows="2" 
+                                    <textarea name="registros[{{ $data }}][observacao]" rows="2"
                                         class="w-full py-2 px-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none">{{ $registrosDia->first()?->observacao ?? '' }}</textarea>
                                 </td>
                             </tr>
