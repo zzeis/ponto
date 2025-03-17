@@ -8,8 +8,8 @@
         @if (isset($horasExtrasTotal))
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div class="bg-white dark:bg-gray-700 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-600">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Relatório de Horas -
-                        {{ $user->name }}</h2>
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Relatório de Horas
+                        </h2>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-600">
                             <span class="text-gray-600 dark:text-gray-300">Total de dias com horas extras:</span>
